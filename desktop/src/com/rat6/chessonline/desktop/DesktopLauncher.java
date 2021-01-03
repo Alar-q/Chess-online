@@ -12,7 +12,7 @@ public class DesktopLauncher {
 			@Override
 			public void setHeight(){
 				WORLD_WIDTH = 451;
-				WORLD_HEIGHT = 451;
+				WORLD_HEIGHT = 550;
 			}
 		}, config);
 	}

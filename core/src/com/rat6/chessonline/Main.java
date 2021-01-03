@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Main extends Game {
-	public float WORLD_WIDTH, WORLD_HEIGHT;
+	public float WORLD_WIDTH = 451, WORLD_HEIGHT;
 	public final float padding = 14f, cellSize = 52f;
 	public SpriteBatch batcher;
 	public Assets assets;

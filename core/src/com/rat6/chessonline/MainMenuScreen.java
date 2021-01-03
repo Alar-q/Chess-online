@@ -11,21 +11,18 @@ import com.badlogic.gdx.math.Vector3;
 public class MainMenuScreen extends ScreenAdapter {
     Main game;
     OrthographicCamera camera;
-    Vector3 touchPoint;
 
     Board board;
     Gamepad gamepad;
-
 
     public MainMenuScreen(Main game){
         this.game = game;
 
         camera = new OrthographicCamera(game.WORLD_WIDTH, game.WORLD_HEIGHT);
         camera.position.set(game.WORLD_WIDTH/2, game.WORLD_HEIGHT/2, 0);
-        touchPoint = new Vector3();
 
         board = new Board(game);
-        gamepad = new Gamepad(game, board);
+        gamepad = new Gamepad(game, camera, board);
     }
     @Override
     public void render(float deltaTime){
@@ -35,16 +32,8 @@ public class MainMenuScreen extends ScreenAdapter {
 
     private void update(float deltaTime){
         Input in = Gdx.input;
+        gamepad.update(in);
 
-        if (in.isTouched()) {
-            camera.unproject(touchPoint.set(in.getX(), in.getY(), 0));
-            gamepad.update(touchPoint);
-        }
-
-        if (in.isKeyPressed(Input.Keys.LEFT)) { }
-        if (in.isKeyPressed(Input.Keys.RIGHT)) { }
-        if (in.isKeyPressed(Input.Keys.UP)) { }
-        if (in.isKeyPressed(Input.Keys.DOWN)) { }
     }
 
     private void present(float deltaTime){
