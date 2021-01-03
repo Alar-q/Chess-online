@@ -1,21 +1,16 @@
 package com.rat6.chessonline;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.rat6.chessonline.ChessLogic.PieceEnum;
 
 public class Board {
-    public enum ChessPiece {
-        empty,
-        kingB, kingW,
-        queenB, queenW,
-        rookB, rookW,
-        bishopB, bishopW,
-        knightB, knightW,
-        pawnB, pawnW,
-    }
+
 
     private Main game;
     float boardSize, boardLeftY;
-    private ChessPiece[][] board;
+    private PieceEnum[][] board;
 
 
     public Board(Main game){
@@ -24,14 +19,17 @@ public class Board {
         boardSize = game.WORLD_WIDTH;
         boardLeftY = game.WORLD_HEIGHT/2-(boardSize/2);
 
-        board = new ChessPiece[8][8];
+        board = new PieceEnum[8][8];
         arrangePieces();
     }
 
-    public void present(float deltaTime){
-        for(int y=0; y<8; y++) {
+    public void present(){
+        for(int y=0; y<8; y++) {//y-row, x-col
             for (int x = 0; x < 8; x++) {
-                drawCharacter(y, x);
+                PieceEnum piece = board[y][x];
+                if(piece == PieceEnum.empty) continue;
+                TextureRegion tr = game.assets.getCharactersTextureR(piece);
+                drawCharacter(y, x, tr);
             }
         }
     }
@@ -39,96 +37,65 @@ public class Board {
     public void arrangePieces(){
         for(int y=2; y<=6; y++) { //y-row, x-col
             for (int x = 0; x < 8; x++) {
-                board[y][x] = ChessPiece.empty;
+                board[y][x] = PieceEnum.empty;
             }
         }
         //pawns
         for(int i=0; i<8; i++)
-            board[1][i] = ChessPiece.pawnW;
+            board[1][i] = PieceEnum.pawnW;
         for(int i=0; i<8; i++)
-            board[6][i] = ChessPiece.pawnB;
+            board[6][i] = PieceEnum.pawnB;
 
         //others
         for(int i=0; i<2; i++) {
-            board[i * 7][0] = (i==0 ? ChessPiece.rookW : ChessPiece.rookB);
-            board[i * 7][1] = (i==0 ? ChessPiece.knightW : ChessPiece.knightB);
-            board[i * 7][2] = (i==0 ? ChessPiece.bishopW : ChessPiece.bishopB);
-            board[i * 7][3] = (i==0 ? ChessPiece.kingW : ChessPiece.kingB);
-            board[i * 7][4] = (i==0 ? ChessPiece.queenW : ChessPiece.queenB);
-            board[i * 7][5] = (i==0 ? ChessPiece.bishopW : ChessPiece.bishopB);
-            board[i * 7][6] = (i==0 ? ChessPiece.knightW : ChessPiece.knightB);
-            board[i * 7][7] = (i==0 ? ChessPiece.rookW : ChessPiece.rookB);
+            board[i * 7][0] = (i==0 ? PieceEnum.rookW : PieceEnum.rookB);
+            board[i * 7][1] = (i==0 ? PieceEnum.knightW : PieceEnum.knightB);
+            board[i * 7][2] = (i==0 ? PieceEnum.bishopW : PieceEnum.bishopB);
+            board[i * 7][3] = (i==0 ? PieceEnum.kingW : PieceEnum.kingB);
+            board[i * 7][4] = (i==0 ? PieceEnum.queenW : PieceEnum.queenB);
+            board[i * 7][5] = (i==0 ? PieceEnum.bishopW : PieceEnum.bishopB);
+            board[i * 7][6] = (i==0 ? PieceEnum.knightW : PieceEnum.knightB);
+            board[i * 7][7] = (i==0 ? PieceEnum.rookW : PieceEnum.rookB);
         }
     }
 
-    public void setPos(int row, int col, int newRow, int newCol){
-        ChessPiece piece = board[row][col];
-        board[newRow][newCol] = piece;
-        board[row][col] = ChessPiece.empty;
-    }
-    public void setPos(int row, int col, ChessPiece chessPiece){
-        board[row][col] = chessPiece;
-    }
-
-    private void drawCharacter(int y, int x){
-        ChessPiece chessPiece = board[y][x];
-        if(chessPiece == ChessPiece.empty) return;
-
-        TextureRegion tr = getCharactersTextureR(chessPiece);
-
-        float chx = game.padding + (game.cellSize * x) + x;
-        float chy = boardLeftY + game.padding + (game.cellSize * y) + y;
+    public void drawCharacter(int row, int col, TextureRegion tr){
+        float chx = game.padding + (game.cellSize * col) + col; //+col - это промежутки
+        float chy = boardLeftY + game.padding + (game.cellSize * row) + row;
 
         game.batcher.draw(tr, chx, chy, game.cellSize, game.cellSize);
-
     }
 
-    public ChessPiece getChessPiece(int row, int col){
-        return board[row][col];
+    public void setPos(int row, int col, PieceEnum pieceEnum){
+        board[row][col] = pieceEnum;
+    }
+    public void setPos(Vector2 newPos, PieceEnum pieceEnum){
+        setPos((int)newPos.y, (int)newPos.x, pieceEnum);
     }
 
-    public TextureRegion getCharactersTextureR(ChessPiece chessPiece){
-        TextureRegion tr = null;
-        switch (chessPiece) {
-            case kingB:
-                tr = game.assets.kingB;
-                break;
-            case kingW:
-                tr = game.assets.kingW;
-                break;
-            case queenB:
-                tr = game.assets.queenB;
-                break;
-            case queenW:
-                tr = game.assets.queenW;
-                break;
-            case rookB:
-                tr = game.assets.rookB;
-                break;
-            case rookW:
-                tr = game.assets.rookW;
-                break;
-            case bishopB:
-                tr = game.assets.bishopB;
-                break;
-            case bishopW:
-                tr = game.assets.bishopW;
-                break;
-            case knightB:
-                tr = game.assets.knightB;
-                break;
-            case knightW:
-                tr = game.assets.knightW;
-                break;
-            case pawnB:
-                tr = game.assets.pawnB;
-                break;
-            case pawnW:
-                tr = game.assets.pawnW;
-                break;
-        }
-        return tr;
+    public PieceEnum getChessPiece(int row, int col){
+        if(isWithinBoard(row, col))
+            return board[row][col];
+        return PieceEnum.empty;
+    }
+    public PieceEnum getChessPiece(Vector2 pos){
+        return getChessPiece((int)pos.y, (int)pos.x);
     }
 
+    public void deleteCharacter(int row, int col){
+        if(isWithinBoard(row, col))
+            board[row][col] = PieceEnum.empty;
+    }
+    public void deleteCharacter(Vector2 v){
+        deleteCharacter((int)v.y, (int)v.x);
+    }
 
+    public static boolean isWithinBoard(int row, int col){
+        if(row>=0 && row<8 && col>=0 && col<8)
+            return true;
+        return false;
+    }
+    public static boolean isWithinBoard(Vector2 pos){
+        return isWithinBoard((int)pos.y, (int)pos.x);
+    }
 }

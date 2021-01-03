@@ -38,7 +38,7 @@ public class MainMenuScreen extends ScreenAdapter {
 
     private void present(float deltaTime){
         GL20 gl = Gdx.gl;
-        gl.glClearColor(1, 0, 0, 1);
+        gl.glClearColor(0, 0, 0, 1);
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
         game.batcher.setProjectionMatrix(camera.combined);
@@ -52,7 +52,8 @@ public class MainMenuScreen extends ScreenAdapter {
         game.batcher.enableBlending();
         game.batcher.begin();
 
-        board.present(deltaTime);
+        gamepad.present();
+        board.present();
 
         game.batcher.end();
     }
