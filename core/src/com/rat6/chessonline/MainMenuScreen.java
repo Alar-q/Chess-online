@@ -24,6 +24,7 @@ public class MainMenuScreen extends ScreenAdapter {
         board = new Board(game);
         gamepad = new Gamepad(game, camera, board);
     }
+
     @Override
     public void render(float deltaTime){
         update(deltaTime);
