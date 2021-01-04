@@ -8,30 +8,36 @@ import java.util.List;
 
 public class Pawn extends FigureLogic {
 
+    public Pawn(Board board) {
+        super(board);
+    }
+
     @Override
-    public boolean canMove(Board board, PieceEnum piece, Vector2 position, Vector2 to) {
+    public boolean canMove(PieceEnum piece, Vector2 position, Vector2 to) {
         int posRow = (int) position.y, posCol = (int) position.x;
         int toRow = (int) to.y, toCol = (int) to.x;
 
         PieceEnum team = blackOrWhite(piece);
 
-        boolean canMove = ((Math.abs(posRow-toRow)==1 && posCol==toCol) || (posRow==toRow && Math.abs(posCol-toCol)==1));
+        PieceEnum underAttack = board.getChessPiece(to);
+        PieceEnum team2 = blackOrWhite(underAttack);
 
-        return !isOursUnderAttack(board, piece, to)  && canMove;
-    }
+        boolean diagonally = (team2 != PieceEnum.empty) && (team2 == PieceEnum.white ? team == PieceEnum.black  && toRow-posRow==-1 : team == PieceEnum.white  && toRow-posRow==1) && Math.abs(posCol-toCol)==1;
 
-    @Override
-    public List<Vector2> getAvailableCells(Board board, PieceEnum piece, Vector2 position) {
-        List<Vector2> available = new ArrayList<Vector2>();
-        Vector2 v = new Vector2();
-        for(int x=0; x<8; x++){
-            for(int y=0; y<8; y++){
-                v.set(x, y);
-                if(canMove(board, piece, position, v))
-                    available.add(new Vector2(v));
+        boolean firstMove = position.y == 1 || position.y == 6;
+        boolean correctDist = (team==PieceEnum.white ? posRow-toRow==-1 : posRow-toRow==1);
+        if(!correctDist && firstMove) {
+            correctDist = team == PieceEnum.white ? posRow - toRow == -2 : posRow - toRow == 2;
+            if(correctDist) { //Фигура на пути
+                int ceiling_wall_Y = team == PieceEnum.white ? (int) to.y - 1 : (int) to.y + 1;
+                underAttack = board.getChessPiece(ceiling_wall_Y, (int) to.x);
+                correctDist = underAttack == PieceEnum.empty ;
             }
         }
 
-        return available;
+        boolean vertically = (team2 == PieceEnum.empty) && correctDist && posCol==toCol;
+
+        return vertically || diagonally;
     }
+
 }

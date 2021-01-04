@@ -52,8 +52,9 @@ public class MainMenuScreen extends ScreenAdapter {
         game.batcher.enableBlending();
         game.batcher.begin();
 
-        gamepad.present();
+        gamepad.highlight();
         board.present();
+        gamepad.present();
 
         game.batcher.end();
     }

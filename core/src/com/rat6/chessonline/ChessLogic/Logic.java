@@ -1,4 +1,5 @@
 package com.rat6.chessonline.ChessLogic;
+import com.rat6.chessonline.Board;
 import com.rat6.chessonline.ChessLogic.PieceEnum;
 
 public class Logic {
@@ -10,13 +11,13 @@ public class Logic {
     private FigureLogic bishop;
     private FigureLogic pawn;
 
-    public Logic(){
-        queen = new Queen();
-        king = new King();
-        knight = new Knight();
-        rook = new Rook();
-        bishop = new Bishop();
-        pawn = new Pawn();
+    public Logic(Board board){
+        queen = new Queen(board);
+        king = new King(board);
+        knight = new Knight(board);
+        rook = new Rook(board);
+        bishop = new Bishop(board);
+        pawn = new Pawn(board);
     }
 
     public FigureLogic getFigureImpl(PieceEnum pieceEnum){
