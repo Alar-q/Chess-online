@@ -2,7 +2,6 @@ package com.rat6.chessonline;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.rat6.chessonline.ChessLogic.Logic;
 
 public class Main extends Game {
 	public float WORLD_WIDTH = 451, WORLD_HEIGHT;

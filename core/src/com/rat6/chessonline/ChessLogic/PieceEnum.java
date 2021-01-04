@@ -1,7 +1,7 @@
 package com.rat6.chessonline.ChessLogic;
 
 public enum PieceEnum {
-    can, cannot, //Выделение клеток
+    can, cannot, castling, //Выделение клеток
     empty,
     black, white,
     kingB, kingW,

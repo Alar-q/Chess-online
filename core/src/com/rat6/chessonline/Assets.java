@@ -22,6 +22,7 @@ public class Assets {
     public TextureRegion pawnW;
     public TextureRegion can;
     public TextureRegion cannot;
+    public TextureRegion castling;
 
 
     public Texture loadTexture(String fileName) {
@@ -34,6 +35,7 @@ public class Assets {
 
         can = new TextureRegion(atlas, 704, 0, 52, 52);
         cannot = new TextureRegion(atlas, 640, 0, 52, 52);
+        castling = new TextureRegion(atlas, 640, 0, 52, 52);
 
         bishopB = new TextureRegion(atlas, 512, 64, 64, 64);
         bishopW = new TextureRegion(atlas, 576, 64, 64, 64);
@@ -52,12 +54,17 @@ public class Assets {
 
         pawnB = new TextureRegion(atlas, 768, 128, 64, 64);
         pawnW = new TextureRegion(atlas, 832, 128, 64, 64);
-
     }
 
     public TextureRegion getCharactersTextureR(PieceEnum pieceEnum){
         TextureRegion tr = null;
         switch (pieceEnum) {
+            case pawnB:
+                tr = pawnB;
+                break;
+            case pawnW:
+                tr = pawnW;
+                break;
             case kingB:
                 tr = kingB;
                 break;
@@ -88,17 +95,14 @@ public class Assets {
             case knightW:
                 tr = knightW;
                 break;
-            case pawnB:
-                tr = pawnB;
-                break;
-            case pawnW:
-                tr = pawnW;
-                break;
             case can:
                 tr = can;
                 break;
             case cannot:
                 tr = cannot;
+                break;
+            case castling:
+                tr = castling;
                 break;
 
         }

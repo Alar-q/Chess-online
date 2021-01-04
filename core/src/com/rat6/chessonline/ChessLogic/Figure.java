@@ -1,28 +1,37 @@
 package com.rat6.chessonline.ChessLogic;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FigureLogic {
+public abstract class Figure {
     protected Board board;
+    public boolean visible, isFirstMove;
+    public PieceEnum piece;
+    public PieceEnum team;
+    public Vector2 position, lastPosition;
 
-    public FigureLogic(Board board){
+    public Figure(Board board, PieceEnum piece, Vector2 position){
         this.board = board;
+        this.piece = piece;
+        this.position = position;
+        this.team = getTeam(piece);
+        lastPosition = new Vector2(-1, -1);
+        visible = true;
+        isFirstMove = true;
     }
 
-    public abstract boolean canMove(PieceEnum piece, Vector2 position, Vector2 to);
+    public abstract boolean canMove(Vector2 to);
 
-    public List<Vector2> getAvailableCells(PieceEnum piece, Vector2 position){
+    public List<Vector2> getAvailableCells(){
         List<Vector2> available = new ArrayList<Vector2>();
         Vector2 v = new Vector2();
         for(int x=0; x<8; x++){
             for(int y=0; y<8; y++){
                 v.set(x, y);
-                if(canMove(piece, position, v))
+                if(canMove(v))
                     available.add(new Vector2(v));
             }
         }
@@ -42,6 +51,9 @@ public abstract class FigureLogic {
         }
         return horizontally;
     }
+    public boolean goodHorizontally(Vector2 to){
+        return goodHorizontally((int)position.y, (int)position.x, (int)to.y, (int)to.x);
+    }
 
     public boolean goodVertically(int posRow, int posCol, int toRow, int toCol){
         boolean vertically = posCol==toCol; //&& Math.abs(posRow-toRow)==1 ;
@@ -54,6 +66,9 @@ public abstract class FigureLogic {
             }
         }
         return vertically;
+    }
+    public boolean goodVertically(Vector2 to){
+        return goodVertically((int)position.y, (int)position.x, (int)to.y, (int)to.x);
     }
 
     public boolean goodDiagonally(int posRow, int posCol, int toRow, int toCol){
@@ -69,6 +84,9 @@ public abstract class FigureLogic {
         }
         return diagonally;
     }
+    public boolean goodDiagonally(Vector2 to){
+        return goodDiagonally((int)position.y, (int)position.x, (int)to.y, (int)to.x);
+    }
 
     public boolean isFigureOn(int row, int col){
         PieceEnum piece = board.getChessPiece(row, col);
@@ -77,18 +95,41 @@ public abstract class FigureLogic {
         return true;
     }
 
-    public boolean isOursUnderAttack(PieceEnum piece, Vector2 to){
-        PieceEnum team1 = blackOrWhite(piece);
+    public boolean isOwnUnderAttack(Vector2 to){
+        PieceEnum team1 = getTeam(piece);
         PieceEnum underAttack = board.getChessPiece(to);
-        PieceEnum team2 = blackOrWhite(underAttack);
+        PieceEnum team2 = getTeam(underAttack);
         return team1 == team2;
     }
 
-    public PieceEnum blackOrWhite(PieceEnum piece){
+    public boolean isPosUnderAttack(int row, int col){
+        Vector2 movePos = new Vector2(row, col);
+        for(int x=0; x<8; x++){
+            for(int y=0; y<8; y++){
+                Figure en = board.get(movePos);
+                if(en.team==team)
+                    continue;
+                else if(en.canMove(movePos))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public static PieceEnum getTeam(PieceEnum piece){
        if(piece==PieceEnum.bishopB || piece==PieceEnum.kingB || piece==PieceEnum.knightB || piece==PieceEnum.pawnB || piece==PieceEnum.queenB || piece==PieceEnum.rookB)
             return PieceEnum.black;
        else if(piece==PieceEnum.bishopW || piece==PieceEnum.kingW || piece==PieceEnum.knightW || piece==PieceEnum.pawnW || piece==PieceEnum.queenW || piece==PieceEnum.rookW)
             return PieceEnum.white;
-       return PieceEnum.empty;
+       return PieceEnum.empty; //empty, can, cannot
+    }
+
+    public void setVisible(boolean b){
+        visible = b;
+    }
+    public void setPosition(int row, int col){
+        isFirstMove = false;
+        lastPosition.set(position);
+        position.set(col, row);
     }
 }
