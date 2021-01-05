@@ -5,8 +5,9 @@ import com.rat6.chessonline.Board;
 
 public class Knight extends Figure {
 
-    public Knight(Board board, PieceEnum piece, Vector2 position) {
-        super(board, piece, position);
+    public Knight(Board board, PieceEnum team, Vector2 position) {
+        super(board, team, position);
+        piece = team == PieceEnum.white ? PieceEnum.knightW : PieceEnum.knightB;
     }
 
     @Override

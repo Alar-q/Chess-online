@@ -3,6 +3,7 @@ package com.rat6.chessonline;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.rat6.chessonline.ChessLogic.Figure;
 import com.rat6.chessonline.ChessLogic.PieceEnum;
 
 public class Assets {
@@ -20,9 +21,9 @@ public class Assets {
     public TextureRegion knightW;
     public TextureRegion pawnB;
     public TextureRegion pawnW;
-    public TextureRegion can;
-    public TextureRegion cannot;
-    public TextureRegion castling;
+    public TextureRegion green;
+    public TextureRegion blue;
+    public TextureRegion red;
 
 
     public Texture loadTexture(String fileName) {
@@ -33,9 +34,9 @@ public class Assets {
         atlas = loadTexture("atlas.png");
         board = new TextureRegion(atlas, 0, 0, 451, 451);
 
-        can = new TextureRegion(atlas, 704, 0, 52, 52);
-        cannot = new TextureRegion(atlas, 640, 0, 52, 52);
-        castling = new TextureRegion(atlas, 640, 0, 52, 52);
+        green = new TextureRegion(atlas, 704, 0, 52, 52);
+        blue = new TextureRegion(atlas, 640, 0, 52, 52);
+        red = new TextureRegion(atlas, 640, 0, 52, 52);
 
         bishopB = new TextureRegion(atlas, 512, 64, 64, 64);
         bishopW = new TextureRegion(atlas, 576, 64, 64, 64);
@@ -96,17 +97,26 @@ public class Assets {
                 tr = knightW;
                 break;
             case can:
-                tr = can;
+                tr = green;
                 break;
             case cannot:
-                tr = cannot;
-                break;
-            case castling:
-                tr = castling;
+                tr = blue;
                 break;
 
         }
         return tr;
+    }
+
+    public void printBoard(Board board){
+        System.out.print("****************************");
+        for(int y=7; y>-1; y--){
+            System.out.println();
+            for(int x=0; x<8; x++){
+                Figure f = board.get(y, x);
+                System.out.print(f.piece + " ");
+            }
+        }
+        System.out.println("\n****************************");
     }
 
     public void dispose(){

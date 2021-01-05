@@ -5,15 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
+import com.rat6.chessonline.ChessLogic.PieceEnum;
 
 public class MainMenuScreen extends ScreenAdapter {
-    Main game;
-    OrthographicCamera camera;
+    private Main game;
+    private OrthographicCamera camera;
 
-    Board board;
-    Gamepad gamepad;
+    private Board board;
+    private Gamepad gamepad;
 
     public MainMenuScreen(Main game){
         this.game = game;
@@ -22,22 +21,22 @@ public class MainMenuScreen extends ScreenAdapter {
         camera.position.set(game.WORLD_WIDTH/2, game.WORLD_HEIGHT/2, 0);
 
         board = new Board(game);
-        gamepad = new Gamepad(game, camera, board);
+        gamepad = new Gamepad(game, camera, board, PieceEnum.white);
     }
 
     @Override
     public void render(float deltaTime){
-        update(deltaTime);
-        present(deltaTime);
+        update();
+        present();
     }
 
-    private void update(float deltaTime){
+    private void update(){
         Input in = Gdx.input;
         gamepad.update(in);
-
+        board.update();
     }
 
-    private void present(float deltaTime){
+    private void present(){
         GL20 gl = Gdx.gl;
         gl.glClearColor(0, 0, 0, 1);
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -53,9 +52,10 @@ public class MainMenuScreen extends ScreenAdapter {
         game.batcher.enableBlending();
         game.batcher.begin();
 
-        gamepad.highlight();
-        board.present();
-        gamepad.present();
+        gamepad.highlight(); //Available positions
+        board.highlight(); //Check
+        board.present(); //draw figures
+        gamepad.present(); //one captured figure under finger
 
         game.batcher.end();
     }

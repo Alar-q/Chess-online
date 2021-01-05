@@ -5,8 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.rat6.chessonline.ChessLogic.Figure;
-import com.rat6.chessonline.ChessLogic.PieceEnum;
+import com.rat6.chessonline.ChessLogic.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,9 @@ import java.util.List;
 public class Gamepad {
     private Main game;
     private Board board;
+
+    private PieceEnum team;
+
     private OrthographicCamera camera;
     private Vector3 touchPoint;
 
@@ -26,15 +28,25 @@ public class Gamepad {
 
     private List<Vector2> available;
 
-    public Gamepad(Main game, OrthographicCamera camera, Board board){
+    private CastlingLogic castlingLogic;
+    private PawnTransfLogic pawnTransfLogic;
+    private PawnInterceptionLogic pawnInterceptionLogic;
+
+    public Gamepad(Main game, OrthographicCamera camera, Board board, PieceEnum team){
         this.game = game;
         this.camera = camera;
         this.board = board;
+        this.team = team;
+        castlingLogic = board.getCastling();
+        pawnTransfLogic = board.getPawnTransformation();
+        pawnInterceptionLogic = board.getPawnInterceptionLogic();
         touchPoint = new Vector3();
         capturedPos = new Vector2(-1, -1);//В координатах доски [0, 7]
         lastPos = new Vector2(-1, -1);
         available = new ArrayList<Vector2>();
     }
+
+
     public void update(Input in){
         if (in.isTouched()) {
             camera.unproject(touchPoint.set(in.getX(), in.getY(), 0));
@@ -43,23 +55,32 @@ public class Gamepad {
             int col = (int) Math.floor((touchPoint.x - game.padding) / game.cellSize);
             int row = (int) Math.floor((touchPoint.y - board.boardLeftY - game.padding) / game.cellSize);
 
-            lastPos.set(col, row);
-            PieceEnum lastPiece = board.getChessPiece(row, col);
+            if (pawnTransfLogic.isTransNow)
+                pawnTransfLogic.onTouch(row, col);
+            else
+                onTouch(row, col);
+        }
+        else onTouchRelease();
+    }
 
-            if(!isCaptured() && lastPiece != PieceEnum.empty && Board.isWithinBoard(lastPos)) {
-                capturePiece(lastPiece, lastPos);
+    public void onTouch(int row, int col) {
+        lastPos.set(col, row);
+        Figure f = board.get(row, col);
+        PieceEnum lastPiece = f.piece;
+        //if(f.team!=team) return;
+        if (!isCaptured() && lastPiece != PieceEnum.empty && Board.isWithinBoard(row, col))
+            capturePiece(lastPiece, lastPos);
+
+    }
+
+    private void onTouchRelease(){
+        if(isCaptured()) {
+            if(Board.isWithinBoard(lastPos) && figure.canMove(lastPos)) {
+                board.move(capturedPos, lastPos);
             }
-        }else {
-            if(isCaptured()) {
-                if(Board.isWithinBoard(lastPos) && figure.canMove(lastPos)) {
-                    board.move(capturedPos, lastPos);
-                }
-                pawn_Reached_The_End();
-                //else board.setPos(capturedPos, capturedPiece);
-                figure.setVisible(true);
-                available.clear();
-                capturedPos.set(-1, -1);
-            }
+            figure.setVisible(true);
+            available.clear();
+            capturedPos.set(-1, -1);
         }
     }
 
@@ -70,7 +91,6 @@ public class Gamepad {
         figure = board.get(lastPos);
         figure.setVisible(false);//board.deleteCharacter(lastPos);
         available.addAll(figure.getAvailableCells());
-
     }
 
     public void present(){
@@ -82,24 +102,18 @@ public class Gamepad {
     public void highlight(){
         if(isCaptured()) {
             //Подсвечивать места куда можно ходить
-            for (Vector2 v : available) {
-                board.drawCharacter((int) v.y, (int) v.x, game.assets.can);
+            TextureRegion tr = null;
+            for (Vector2 vTo : available) {
+                tr = game.assets.green;
+                if((figure.piece == PieceEnum.kingB || figure.piece == PieceEnum.kingW) && castlingLogic.isCastling(figure, capturedPos, vTo) ||
+                        (board.get(vTo).piece==PieceEnum.empty && pawnInterceptionLogic.isPosIsInterception(vTo)))
+                    tr = game.assets.blue;
+                board.drawCharacter((int) vTo.y, (int) vTo.x, tr);
             }
         }
     }
 
-    public Vector2 pawn_Reached_The_End(){
-        for(int i=0; i<2; i++){
-            for(int x=0; x<8; x++){
-                PieceEnum p = board.getChessPiece(7*i, x);
-                if(p==PieceEnum.pawnB || p==PieceEnum.pawnW) {
-                    System.out.println(x + " " + 7*i);
-                    return new Vector2(x, 7*i);
-                }
-            }
-        }
-        return new Vector2(-1, -1);
-    }
+
 
     private boolean isCaptured() {
         if (capturedPos.x != -1) return true;

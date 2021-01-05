@@ -4,8 +4,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
 
 public class Rook extends Figure {
-    public Rook(Board board, PieceEnum piece, Vector2 position) {
-        super(board, piece, position);
+    public Rook(Board board, PieceEnum team, Vector2 position) {
+        super(board, team, position);
+        piece = team == PieceEnum.white ? PieceEnum.rookW : PieceEnum.rookB;
     }
 
     @Override

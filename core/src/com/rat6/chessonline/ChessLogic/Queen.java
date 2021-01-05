@@ -5,8 +5,9 @@ import com.rat6.chessonline.Board;
 
 public class Queen extends Figure {
 
-    public Queen(Board board, PieceEnum pieceEnum, Vector2 position) {
-        super(board, pieceEnum, position);
+    public Queen(Board board, PieceEnum team, Vector2 position) {
+        super(board, team, position);
+        piece = team == PieceEnum.white ? PieceEnum.queenW : PieceEnum.queenB;
     }
 
     @Override

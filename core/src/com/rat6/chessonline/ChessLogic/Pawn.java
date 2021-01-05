@@ -4,9 +4,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
 
 public class Pawn extends Figure {
-
-    public Pawn(Board board, PieceEnum piece, Vector2 position) {
-        super(board, piece, position);
+    private PawnInterceptionLogic pawnInterceptionLogic;
+    public Pawn(Board board, PieceEnum team, Vector2 position) {
+        super(board, team, position);
+        piece = team == PieceEnum.white ? PieceEnum.pawnW : PieceEnum.pawnB;
+        pawnInterceptionLogic = board.getPawnInterceptionLogic();
     }
 
     @Override
@@ -18,6 +20,9 @@ public class Pawn extends Figure {
         PieceEnum team2 = board.get(to).team;
 
         boolean diagonally = (team2 != PieceEnum.empty) && (team2 == PieceEnum.white ? team == PieceEnum.black  && toRow-posRow==-1 : team == PieceEnum.white  && toRow-posRow==1) && Math.abs(posCol-toCol)==1;
+
+        //Просто проверяем находится ли эта позиция to на диагонали и эта точка - это прошлое перепрыгнутая точка. Кстати, эта точка должна удаляться каждый ход
+        boolean pawnInterception = pawnInterceptionLogic.fits(posRow, posCol, toRow, toCol);
 
         boolean correctDist = (team==PieceEnum.white ? posRow-toRow==-1 : posRow-toRow==1);
 
@@ -32,7 +37,7 @@ public class Pawn extends Figure {
 
         boolean vertically = (team2 == PieceEnum.empty) && correctDist && posCol==toCol;
 
-        return vertically || diagonally;
+        return vertically || diagonally || pawnInterception;
     }
 
 }

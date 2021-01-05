@@ -3,11 +3,15 @@ package com.rat6.chessonline.ChessLogic;
 import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
 
-import static com.rat6.chessonline.ChessLogic.Castling.castling;
 
 public class King extends Figure {
-    public King(Board board, PieceEnum pieceEnum, Vector2 position) {
-        super(board, pieceEnum, position);
+
+    private CastlingLogic castlingLogic;
+
+    public King(Board board, PieceEnum team, Vector2 position) {
+        super(board, team, position);
+        piece = team == PieceEnum.white ? PieceEnum.kingW : PieceEnum.kingB;
+        this.castlingLogic = board.getCastling();
     }
 
     @Override
@@ -19,15 +23,11 @@ public class King extends Figure {
 
         boolean horizontally = posRow==toRow && Math.abs(posCol-toCol)==1;
 
-        boolean castling = castling(this, posRow, posCol, toRow, toCol);
-        if(castling){
-            System.out.println(toRow + " "  + toCol);
-            System.out.println("Castling");
-        }
+        boolean isCastling = castlingLogic.isCastling(this, position, to);
 
         boolean vertically = Math.abs(posRow-toRow)==1 && posCol==toCol;
 
-        boolean canMove = vertically || horizontally || diagonally || castling;
+        boolean canMove = vertically || horizontally || diagonally || isCastling;
 
         return  !isOwnUnderAttack(to) && canMove;
     }

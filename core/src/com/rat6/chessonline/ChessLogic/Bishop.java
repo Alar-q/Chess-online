@@ -5,8 +5,9 @@ import com.rat6.chessonline.Board;
 
 public class Bishop extends Figure {
 
-    public Bishop(Board board, PieceEnum pieceEnum, Vector2 position) {
-        super(board, pieceEnum, position);
+    public Bishop(Board board, PieceEnum team, Vector2 position) {
+        super(board, team, position);
+        piece = team == PieceEnum.white ? PieceEnum.bishopW : PieceEnum.bishopB;
     }
 
     @Override

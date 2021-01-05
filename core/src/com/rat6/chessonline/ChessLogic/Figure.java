@@ -13,11 +13,11 @@ public abstract class Figure {
     public PieceEnum team;
     public Vector2 position, lastPosition;
 
-    public Figure(Board board, PieceEnum piece, Vector2 position){
+    public Figure(Board board, PieceEnum team, Vector2 position){
         this.board = board;
-        this.piece = piece;
         this.position = position;
-        this.team = getTeam(piece);
+        this.team = team;
+        this.piece = PieceEnum.empty;
         lastPosition = new Vector2(-1, -1);
         visible = true;
         isFirstMove = true;
@@ -96,33 +96,40 @@ public abstract class Figure {
     }
 
     public boolean isOwnUnderAttack(Vector2 to){
-        PieceEnum team1 = getTeam(piece);
-        PieceEnum underAttack = board.getChessPiece(to);
-        PieceEnum team2 = getTeam(underAttack);
-        return team1 == team2;
+        PieceEnum team2 = board.get(to).team;
+        return team == team2;
     }
 
     public boolean isPosUnderAttack(int row, int col){
-        Vector2 movePos = new Vector2(row, col);
-        for(int x=0; x<8; x++){
-            for(int y=0; y<8; y++){
-                Figure en = board.get(movePos);
-                if(en.team==team)
-                    continue;
-                else if(en.canMove(movePos))
+
+        Vector2 pos = new Vector2(col, row);
+
+
+        for(int y=0; y<8; y++){
+            for(int x=0; x<8; x++){
+
+                Figure en = board.get(y, x);
+
+                if(en.team!=team && en.canMove(pos))
+                    return true;
+
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isPosUnderAttack(){
+        for(int y=0; y<8; y++){
+            for(int x=0; x<8; x++){
+                Figure en = board.get(y, x);
+                if(en.team!=team && en.canMove(position))
                     return true;
             }
         }
         return false;
     }
 
-    public static PieceEnum getTeam(PieceEnum piece){
-       if(piece==PieceEnum.bishopB || piece==PieceEnum.kingB || piece==PieceEnum.knightB || piece==PieceEnum.pawnB || piece==PieceEnum.queenB || piece==PieceEnum.rookB)
-            return PieceEnum.black;
-       else if(piece==PieceEnum.bishopW || piece==PieceEnum.kingW || piece==PieceEnum.knightW || piece==PieceEnum.pawnW || piece==PieceEnum.queenW || piece==PieceEnum.rookW)
-            return PieceEnum.white;
-       return PieceEnum.empty; //empty, can, cannot
-    }
 
     public void setVisible(boolean b){
         visible = b;
