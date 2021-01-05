@@ -76,9 +76,9 @@ public class Board {
         board[0][0] = new Rook(this, PieceEnum.white, new Vector2(0, 0));
         board[0][1] = new Knight(this, PieceEnum.white, new Vector2(1, 0));
         board[0][2] = new Bishop(this, PieceEnum.white, new Vector2(2, 0));
-        board[0][3] = new King(this, PieceEnum.white, new Vector2(3, 0));
+        board[0][3] = new Queen(this, PieceEnum.white, new Vector2(3, 0));
+        board[0][4] = new King(this, PieceEnum.white, new Vector2(4, 0));
         checkW = new Check(this, board[0][3], game.assets.red);
-        board[0][4] = new Queen(this, PieceEnum.white, new Vector2(4, 0));
         board[0][5] = new Bishop(this, PieceEnum.white, new Vector2(5, 0));
         board[0][6] = new Knight(this, PieceEnum.white, new Vector2(6, 0));
         board[0][7] = new Rook(this, PieceEnum.white, new Vector2(7, 0));
@@ -86,9 +86,9 @@ public class Board {
         board[7][0] = new Rook(this, PieceEnum.black, new Vector2(0, 7));
         board[7][1] = new Knight(this, PieceEnum.black, new Vector2(1, 7));
         board[7][2] = new Bishop(this, PieceEnum.black, new Vector2(2, 7));
-        board[7][3] = new King(this, PieceEnum.black, new Vector2(3, 7));
+        board[7][3] = new Queen(this, PieceEnum.black, new Vector2(3, 7));
+        board[7][4] = new King(this, PieceEnum.black, new Vector2(4, 7));
         checkB = new Check(this, board[7][3], game.assets.red);
-        board[7][4] = new Queen(this, PieceEnum.black, new Vector2(4, 7));
         board[7][5] = new Bishop(this, PieceEnum.black, new Vector2(5, 7));
         board[7][6] = new Knight(this, PieceEnum.black, new Vector2(6, 7));
         board[7][7] = new Rook(this, PieceEnum.black, new Vector2(7, 7));
