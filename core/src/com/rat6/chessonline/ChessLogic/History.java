@@ -18,13 +18,16 @@ public class History {
     // Просто воспроизводим всю игру
     public void roll_back(int n){
         board.clear();
-        for(int i=0; i<history.size()-n; i++){
+        int less = history.size()-n;
+
+        for(int i=0; i<less; i++){
 
             String move = history.remove(0);
             String[] moves;
             moves = move.split("-");
             if(moves.length<2)
                 moves = move.split(":");
+            System.out.println("move from " + moves[0] + " to " + moves[1] );
 
 
             char[] from = moves[0].toCharArray();
@@ -39,9 +42,11 @@ public class History {
             }
             int colTo = ABC2INT(String.valueOf(to[0]));
             int rowTo = Integer.parseInt(String.valueOf(to[1])) - 1;
-
+            //System.out.println("move from " + (col+1) + " " + (row+1) + " to " + (colTo+1) + " " + (rowTo+1) );
             board.move(row, col, rowTo, colTo);
         }
+
+        history.clear();
     }
 
     public void move(int row, int col, int rowTo, int colTo){
@@ -64,7 +69,6 @@ public class History {
         System.out.println(res);
 
         history.add(res);
-
     }
 
 

@@ -61,7 +61,7 @@ public class Board {
 
 
     public void clear(){
-        for(int y=2; y<=6; y++) { //y-row, x-col
+        for(int y=0; y<8; y++) { //y-row, x-col
             for (int x = 0; x < 8; x++) {
                 board[y][x] = createEmpty(y, x);
             }
@@ -106,8 +106,9 @@ public class Board {
     }
 
 
-
+    //В этот метод поступаю только те ходы которые реально будут
     public void move(int row, int col, int rowTo, int colTo){
+        history.move(row, col, rowTo, colTo);
         if(checkW.didntCorrectCheck(row, col, rowTo, colTo) || checkB.didntCorrectCheck(row, col, rowTo, colTo)){
             System.out.println("CHECK you can't move like that");
             //А как поменять все обратно?
@@ -116,7 +117,6 @@ public class Board {
             //return;
         }
 
-        history.move(row, col, rowTo, colTo);
 
         Figure to = get(rowTo, colTo);
         Figure from = get(row, col);
