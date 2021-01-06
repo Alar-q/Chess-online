@@ -33,7 +33,6 @@ public class MainMenuScreen extends ScreenAdapter {
     private void update(){
         Input in = Gdx.input;
         gamepad.update(in);
-        board.update();
     }
 
     private void present(){

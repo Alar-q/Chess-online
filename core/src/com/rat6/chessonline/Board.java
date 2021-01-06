@@ -50,11 +50,6 @@ public class Board {
         }
     }
 
-    public void update(){
-        checkW.update();
-        checkB.update();
-    }
-
     public void highlight(){
         checkW.present();
         checkB.present();
@@ -78,7 +73,7 @@ public class Board {
         board[0][2] = new Bishop(this, PieceEnum.white, new Vector2(2, 0));
         board[0][3] = new Queen(this, PieceEnum.white, new Vector2(3, 0));
         board[0][4] = new King(this, PieceEnum.white, new Vector2(4, 0));
-        checkW = new Check(this, board[0][3], game.assets.red);
+        checkW = new Check(this, board[0][4], game.assets.red);
         board[0][5] = new Bishop(this, PieceEnum.white, new Vector2(5, 0));
         board[0][6] = new Knight(this, PieceEnum.white, new Vector2(6, 0));
         board[0][7] = new Rook(this, PieceEnum.white, new Vector2(7, 0));
@@ -88,7 +83,7 @@ public class Board {
         board[7][2] = new Bishop(this, PieceEnum.black, new Vector2(2, 7));
         board[7][3] = new Queen(this, PieceEnum.black, new Vector2(3, 7));
         board[7][4] = new King(this, PieceEnum.black, new Vector2(4, 7));
-        checkB = new Check(this, board[7][3], game.assets.red);
+        checkB = new Check(this, board[7][4], game.assets.red);
         board[7][5] = new Bishop(this, PieceEnum.black, new Vector2(5, 7));
         board[7][6] = new Knight(this, PieceEnum.black, new Vector2(6, 7));
         board[7][7] = new Rook(this, PieceEnum.black, new Vector2(7, 7));
@@ -112,15 +107,21 @@ public class Board {
         Figure to = get(rowTo, colTo);
         Figure from = get(row, col);
 
-        if(pawnInterceptionLogic.ifInterception_removeEnemyPawn(row, col, rowTo, colTo)){}
+        if(checkW.didntCorrectCheck(row, col, rowTo, colTo) || checkB.didntCorrectCheck(row, col, rowTo, colTo)){
+            return;
+        }
+        else if(pawnInterceptionLogic.ifInterception_removeEnemyPawn(row, col, rowTo, colTo)){}
         else if(pawnInterceptionLogic.fixPawnJump(row, col, rowTo, colTo)){}
         else if(castlingLogic.ifCastling_SwapRook(from, row, col, rowTo, colTo)){}
 
-        if(to.piece==PieceEnum.empty){ //Можно убрать, разницы не будет. Сделан чтобы не создавать новый пустой объект
+        if(to.piece==PieceEnum.empty) //Можно убрать, разницы не будет. Сделан чтобы не создавать новый пустой объект
             set(row, col, to); //swap with empty
-        }else deleteCharacter(row, col); //take (съел)
+        else deleteCharacter(row, col); //take (съел)
 
         set(rowTo, colTo, from); //Поставили взятую рукой фигуру
+
+        checkW.isCheckNow();
+        checkB.isCheckNow();
 
         pawnTransfLogic.pawn_Reached_The_End(rowTo, colTo);
 
@@ -186,14 +187,17 @@ public class Board {
     public CastlingLogic getCastling(){
         return castlingLogic;
     }
+
     public PawnTransfLogic getPawnTransformation(){
         return pawnTransfLogic;
     }
+
     public Check getCheck(PieceEnum team){
         if(team == PieceEnum.white)
             return checkW;
         else return checkB;
     }
+
     public PawnInterceptionLogic getPawnInterceptionLogic(){
         return pawnInterceptionLogic;
     }
