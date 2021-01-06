@@ -60,9 +60,10 @@ public class PawnInterceptionLogic {
     }
 
 
-    public boolean isPosIsInterception(Vector2 v){
-        if(wasOverrun && interceptionPosition.x==v.x && interceptionPosition.y==v.y)
+    public boolean isPosIsInterception(Figure figure, Vector2 v){
+        if((figure.piece==PieceEnum.pawnW || figure.piece==PieceEnum.pawnB ) && wasOverrun && interceptionPosition.x==v.x && interceptionPosition.y==v.y) {
             return true;
+        }
         return false;
     }
 }

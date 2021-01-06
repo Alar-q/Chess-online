@@ -104,13 +104,17 @@ public class Board {
 
 
     public void move(int row, int col, int rowTo, int colTo){
+        if(checkW.didntCorrectCheck(row, col, rowTo, colTo) || checkB.didntCorrectCheck(row, col, rowTo, colTo)){
+            System.out.println("CHECK you can't move like that");
+            //А как поменять все обратно?
+            //Нужно создать класс History в который будут записываться все ходы из set and deleteCharacter
+            return;
+        }
+
         Figure to = get(rowTo, colTo);
         Figure from = get(row, col);
 
-        if(checkW.didntCorrectCheck(row, col, rowTo, colTo) || checkB.didntCorrectCheck(row, col, rowTo, colTo)){
-            return;
-        }
-        else if(pawnInterceptionLogic.ifInterception_removeEnemyPawn(row, col, rowTo, colTo)){}
+        if(pawnInterceptionLogic.ifInterception_removeEnemyPawn(row, col, rowTo, colTo)){}
         else if(pawnInterceptionLogic.fixPawnJump(row, col, rowTo, colTo)){}
         else if(castlingLogic.ifCastling_SwapRook(from, row, col, rowTo, colTo)){}
 
@@ -120,11 +124,7 @@ public class Board {
 
         set(rowTo, colTo, from); //Поставили взятую рукой фигуру
 
-        checkW.isCheckNow();
-        checkB.isCheckNow();
-
         pawnTransfLogic.pawn_Reached_The_End(rowTo, colTo);
-
     }
     public void move(Vector2 newPos, Vector2 toPos){
         move((int)newPos.y, (int)newPos.x, (int)toPos.y, (int)toPos.x);

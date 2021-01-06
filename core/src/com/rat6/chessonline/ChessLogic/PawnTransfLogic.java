@@ -22,6 +22,7 @@ public class PawnTransfLogic {
         transPos = new Vector2();
     }
 
+    /* Посмотрим понадобится ли, а так уже можно удалять
     public boolean pawn_Reached_The_End(){
         for(int i=0; i<2; i++){
             for(int x=0; x<8; x++){
@@ -33,8 +34,9 @@ public class PawnTransfLogic {
         }
         return false;
     }
+     */
 
-    public Vector2 pawn_Reached_The_End(int row, int col){
+    public void pawn_Reached_The_End(int row, int col){
         Figure f = board.get(row, col);
         PieceEnum p = f.piece;
 
@@ -42,10 +44,9 @@ public class PawnTransfLogic {
             transPos.set(col, row);
             team = f.team;
             isTransNow = true;
-            return transPos;
         }
-        isTransNow = false;
-        return transPos;
+        else
+            isTransNow = false;
     }
 
 

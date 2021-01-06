@@ -106,7 +106,7 @@ public class Gamepad {
             for (Vector2 vTo : available) {
                 tr = game.assets.green;
                 if((figure.piece == PieceEnum.kingB || figure.piece == PieceEnum.kingW) && castlingLogic.isCastling(figure, capturedPos, vTo) ||
-                        (board.get(vTo).piece==PieceEnum.empty && pawnInterceptionLogic.isPosIsInterception(vTo)))
+                        (board.get(vTo).piece==PieceEnum.empty && pawnInterceptionLogic.isPosIsInterception(figure, vTo)))
                     tr = game.assets.blue;
                 board.drawCharacter((int) vTo.y, (int) vTo.x, tr);
             }

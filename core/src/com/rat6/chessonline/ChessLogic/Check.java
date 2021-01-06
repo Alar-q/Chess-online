@@ -1,44 +1,40 @@
 package com.rat6.chessonline.ChessLogic;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
 
 public class Check {
 
     private Board board;
-    private boolean isCheckNow;
+    private boolean wasCheckBefore;
     private Figure king;
     private TextureRegion tr;
 
     public Check(Board board, Figure king, TextureRegion tr){
         this.board = board;
-        isCheckNow = false;
+        wasCheckBefore = false;
         this.king = king;
         this.tr = tr;
     }
 
     public boolean isCheckNow(){
-        isCheckNow = king.isPosUnderAttack();
-        return isCheckNow;
+        wasCheckBefore = king.isPosUnderAttack();
+        return wasCheckBefore;
     }
 
-    public boolean isCheckAfterMove(int row, int col, int rowTo, int colTo){
-        //Двигаем все, проверяем king.isPosUnderAttack(), если король все еще под ударом, двигаем все обратно и возвращаем true
 
-        return false;
-    }
 
     public void present(){
-        if(isCheckNow){
+        if(wasCheckBefore)
             board.drawCharacter(king.position, tr);
-        }
     }
 
     public boolean didntCorrectCheck(int row, int col, int rowTo, int colTo){
-        if(isCheckNow()){
-            if(isCheckAfterMove(row, col, rowTo, colTo))
-                return true;
+
+
+        boolean wcb = wasCheckBefore;
+        if(isCheckNow() && wcb){
+            return true;
         }
         return false;
     }
