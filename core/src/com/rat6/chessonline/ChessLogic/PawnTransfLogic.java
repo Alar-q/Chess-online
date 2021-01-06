@@ -1,6 +1,5 @@
 package com.rat6.chessonline.ChessLogic;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
@@ -21,20 +20,6 @@ public class PawnTransfLogic {
         isTransNow = false;
         transPos = new Vector2();
     }
-
-    /* Посмотрим понадобится ли, а так уже можно удалять
-    public boolean pawn_Reached_The_End(){
-        for(int i=0; i<2; i++){
-            for(int x=0; x<8; x++){
-                PieceEnum p = board.getChessPiece(7*i, x);
-                if(p==PieceEnum.pawnB || p==PieceEnum.pawnW) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-     */
 
     public void pawn_Reached_The_End(int row, int col){
         Figure f = board.get(row, col);
@@ -74,7 +59,7 @@ public class PawnTransfLogic {
         Figure f = null;
 
         //Можно добавить кнопку при нажатии которой игрок отказывается менять пешку
-        if(!Board.isWithinBoard(row, col) || !(row>2 && row<5)){
+        if(!Board.iS_WITHIN_BOARD(row, col) || !(row>2 && row<5)){
             return;
         }
         else if(col>=0 && col<2){

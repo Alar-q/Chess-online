@@ -67,15 +67,15 @@ public class Gamepad {
         lastPos.set(col, row);
         Figure f = board.get(row, col);
         PieceEnum lastPiece = f.piece;
-        //if(f.team!=team) return;
-        if (!isCaptured() && lastPiece != PieceEnum.empty && Board.isWithinBoard(row, col))
+        //if(f.team!=team) return; //Ходить только за свою команду
+        if (!isCaptured() && lastPiece != PieceEnum.empty && Board.iS_WITHIN_BOARD(row, col))
             capturePiece(lastPiece, lastPos);
 
     }
 
     private void onTouchRelease(){
         if(isCaptured()) {
-            if(Board.isWithinBoard(lastPos) && figure.canMove(lastPos)) {
+            if(Board.iS_WITHIN_BOARD(lastPos) && figure.canMove(lastPos)) {
                 board.move(capturedPos, lastPos);
             }
             figure.setVisible(true);
@@ -105,7 +105,7 @@ public class Gamepad {
             TextureRegion tr = null;
             for (Vector2 vTo : available) {
                 tr = game.assets.green;
-                if((figure.piece == PieceEnum.kingB || figure.piece == PieceEnum.kingW) && castlingLogic.isCastling(figure, capturedPos, vTo) ||
+                if(((figure.piece == PieceEnum.kingB || figure.piece == PieceEnum.kingW) && castlingLogic.isCastling(figure, capturedPos, vTo)) ||
                         (board.get(vTo).piece==PieceEnum.empty && pawnInterceptionLogic.isPosIsInterception(figure, vTo)))
                     tr = game.assets.blue;
                 board.drawCharacter((int) vTo.y, (int) vTo.x, tr);

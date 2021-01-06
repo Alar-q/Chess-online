@@ -31,7 +31,6 @@ public class Check {
 
     public boolean didntCorrectCheck(int row, int col, int rowTo, int colTo){
 
-
         boolean wcb = wasCheckBefore;
         if(isCheckNow() && wcb){
             return true;

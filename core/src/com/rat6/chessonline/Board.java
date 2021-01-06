@@ -18,6 +18,8 @@ public class Board {
     private Check checkW;
     private Check checkB;
 
+    private History history;
+
     public Board(Main game){
         this.game = game;
 
@@ -29,6 +31,8 @@ public class Board {
         castlingLogic = new CastlingLogic(this);
         pawnTransfLogic = new PawnTransfLogic(game, this);
         pawnInterceptionLogic = new PawnInterceptionLogic(this);
+
+        history = new History(this);
 
         clear();
     }
@@ -107,9 +111,12 @@ public class Board {
         if(checkW.didntCorrectCheck(row, col, rowTo, colTo) || checkB.didntCorrectCheck(row, col, rowTo, colTo)){
             System.out.println("CHECK you can't move like that");
             //А как поменять все обратно?
-            //Нужно создать класс History в который будут записываться все ходы из set and deleteCharacter
-            return;
+            //Нужно создать класс History в который будут записываться все ходы из set() and deleteCharacter()
+            //Нужен какой-нибудь tree чтобы ходы записывались в последовательности ввода
+            //return;
         }
+
+        history.move(row, col, rowTo, colTo);
 
         Figure to = get(rowTo, colTo);
         Figure from = get(row, col);
@@ -133,7 +140,7 @@ public class Board {
 
 
     public PieceEnum getChessPiece(int row, int col){
-        if(isWithinBoard(row, col))
+        if(iS_WITHIN_BOARD(row, col))
             return board[row][col].piece;
         return PieceEnum.empty;
     }
@@ -144,7 +151,7 @@ public class Board {
 
 
     public Figure get(int row, int col){
-        if(isWithinBoard(row, col))
+        if(iS_WITHIN_BOARD(row, col))
             return board[row][col];
         return createEmpty(row, col);
     }
@@ -176,7 +183,7 @@ public class Board {
 
 
     public void deleteCharacter(int row, int col){
-        if(isWithinBoard(row, col)) {
+        if(iS_WITHIN_BOARD(row, col)) {
             board[row][col] = createEmpty(row, col);
         }
     }
@@ -202,13 +209,13 @@ public class Board {
         return pawnInterceptionLogic;
     }
 
-    public static boolean isWithinBoard(int row, int col){
+    public static boolean iS_WITHIN_BOARD(int row, int col){
         if(row>=0 && row<8 && col>=0 && col<8)
             return true;
         return false;
     }
-    public static boolean isWithinBoard(Vector2 pos){ 
-        return isWithinBoard((int)pos.y, (int)pos.x); 
+    public static boolean iS_WITHIN_BOARD(Vector2 pos){
+        return iS_WITHIN_BOARD((int)pos.y, (int)pos.x);
     }
 
 }
