@@ -21,12 +21,11 @@ public class PawnInterceptionLogic {
     //Если это пешка
     //Если пешка прыгает на два, то мы записываем перепрыгнутую позиция
     //Else удаляем точку
-    public boolean fixPawnJump(int row, int col, int rowTo, int colTo) {
-        Figure f = board.get(row, col);
-        if ((f.piece == PieceEnum.pawnW || f.piece == PieceEnum.pawnB) && col == colTo && Math.abs(row - rowTo) == 2) {
+    public boolean fixPawnJump(int row, int col, int rowTo, int colTo, Figure fFrom) {
+        if ((fFrom.piece == PieceEnum.pawnW || fFrom.piece == PieceEnum.pawnB) && col == colTo && Math.abs(row - rowTo) == 2) {
             wasOverrun = true;
-            interceptionPosition.set(col, f.team == PieceEnum.white ? row + 1 : row - 1);
-            team = f.team;
+            interceptionPosition.set(col, fFrom.team == PieceEnum.white ? row + 1 : row - 1);
+            team = fFrom.team;
             return true;
         } else {
             wasOverrun = false;
@@ -35,28 +34,29 @@ public class PawnInterceptionLogic {
     }
 
 
-    public boolean fits(int row, int col, int rowTo, int colTo){
-        Figure f = board.get(row, col);
-        //Нельзя сделать перехват если 1) его не было, 2) точка совсем не та, 3) команды совпадают, то есть съесть своего
-        if(!wasOverrun ||  ( interceptionPosition.x!=colTo || interceptionPosition.y!=rowTo ) || f.team == team )
+    public boolean fits(int row, int col, int rowTo, int colTo, Figure fFrom){
+        //Нельзя сделать перехват если 1) двойного прыжка не было, 2) точка совсем не та, 3) команды совпадают, то есть нельзя съесть своего
+        if(!wasOverrun ||  ( interceptionPosition.x!=colTo || interceptionPosition.y!=rowTo ) || fFrom.team == team )
             return false;
         //Можно если находится на диагонали
-        else if( Math.abs(col-colTo)==1 && (f.team == PieceEnum.white ? rowTo-row==1 : rowTo-row==-1) )
+        else if( Math.abs(col-colTo)==1 && (fFrom.team == PieceEnum.white ? rowTo-row==1 : rowTo-row==-1) )
             return true;
         else
             return false;
     }
 
 
-    public boolean ifInterception_removeEnemyPawn(int row, int col, int rowTo, int colTo){
-        Figure f = board.get(row, col);
-
-        if((f.piece == PieceEnum.pawnW || f.piece == PieceEnum.pawnB) && fits(row, col, rowTo, colTo)){
-            int i = f.team == PieceEnum.white ? -1 : 1;
+    public boolean ifInterception_removeEnemyPawn(int row, int col, int rowTo, int colTo, Figure figFrom){
+        if((figFrom.piece == PieceEnum.pawnW || figFrom.piece == PieceEnum.pawnB) && fits(row, col, rowTo, colTo, figFrom)){
+            int i = figFrom.team == PieceEnum.white ? -1 : 1;
             interceptionPosition.add(0, i);
             board.deleteCharacter(interceptionPosition);
+            return true;
         }
         return false;
+    }
+    public boolean ifInterception_removeEnemyPawn(Figure figFrom){
+        return ifInterception_removeEnemyPawn( (int)figFrom.lastPosition.y, (int)figFrom.lastPosition.x, (int)figFrom.position.y, (int)figFrom.position.x, figFrom);
     }
 
 

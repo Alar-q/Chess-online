@@ -17,8 +17,8 @@ public class Check {
         this.tr = tr;
     }
 
-    public boolean isCheckNow(){
-        wasCheckBefore = king.isPosUnderAttack();
+    public boolean updateCheck(){
+        wasCheckBefore = king.isPosUnderAttack(); //Проходит по всем клеткам, находит фигуры вражеской команды и проверяет бьют ли они клетку
         return wasCheckBefore;
     }
 
@@ -29,12 +29,9 @@ public class Check {
             board.drawCharacter(king.position, tr);
     }
 
-    public boolean didntCorrectCheck(int row, int col, int rowTo, int colTo){
-
+    public boolean didntCorrectCheck(){
         boolean wcb = wasCheckBefore;
-        if(isCheckNow() && wcb){
-            return true;
-        }
+        if(updateCheck() && wcb) return true;
         return false;
     }
 

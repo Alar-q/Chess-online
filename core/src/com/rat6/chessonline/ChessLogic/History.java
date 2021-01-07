@@ -45,8 +45,10 @@ public class History {
             //System.out.println("move from " + (col+1) + " " + (row+1) + " to " + (colTo+1) + " " + (rowTo+1) );
             board.move(row, col, rowTo, colTo);
         }
-
-        history.clear();
+        for(int i=0; i<n; i++){
+            history.remove(0);
+        }
+        //history.clear();
     }
 
     public void move(int row, int col, int rowTo, int colTo){

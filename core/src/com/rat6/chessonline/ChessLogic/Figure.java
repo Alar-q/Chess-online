@@ -9,8 +9,7 @@ import java.util.List;
 public abstract class Figure {
     protected Board board;
     public boolean visible, isFirstMove;
-    public PieceEnum piece;
-    public PieceEnum team;
+    public PieceEnum piece, team;;
     public Vector2 position, lastPosition;
 
     public Figure(Board board, PieceEnum team, Vector2 position){
@@ -104,12 +103,13 @@ public abstract class Figure {
 
         Vector2 pos = new Vector2(col, row);
 
-
+        //Проходит по всем клеткам,
         for(int y=0; y<8; y++){
             for(int x=0; x<8; x++){
 
                 Figure en = board.get(y, x);
-
+                // находит фигуры вражеской команды
+                // и проверяет бьют ли они клетку
                 if(en.team!=team && en.canMove(pos))
                     return true;
 
@@ -118,16 +118,11 @@ public abstract class Figure {
 
         return false;
     }
-
+    public boolean isPosUnderAttack(Vector2 pos){
+        return isPosUnderAttack((int)pos.y, (int)pos.x);
+    }
     public boolean isPosUnderAttack(){
-        for(int y=0; y<8; y++){
-            for(int x=0; x<8; x++){
-                Figure en = board.get(y, x);
-                if(en.team!=team && en.canMove(position))
-                    return true;
-            }
-        }
-        return false;
+        return isPosUnderAttack(position);
     }
 
 

@@ -21,19 +21,19 @@ public class PawnTransfLogic {
         transPos = new Vector2();
     }
 
-    public void pawn_Reached_The_End(int row, int col){
-        Figure f = board.get(row, col);
+    public boolean fixPawn_Reached_The_End(int row, int col, Figure f) {
         PieceEnum p = f.piece;
 
-        if(( p==PieceEnum.pawnB && row == 0 ) || ( p==PieceEnum.pawnW && row == 7)) {
+        if ((p == PieceEnum.pawnB && row == 0) || (p == PieceEnum.pawnW && row == 7)) {
             transPos.set(col, row);
             team = f.team;
             isTransNow = true;
-        }
-        else
+            return true;
+        } else {
             isTransNow = false;
+            return false;
+        }
     }
-
 
     public void present(){
         TextureRegion tr = game.assets.green;

@@ -108,30 +108,54 @@ public class Board {
 
     //В этот метод поступаю только те ходы которые реально будут
     public void move(int row, int col, int rowTo, int colTo){
+
         history.move(row, col, rowTo, colTo);
-        if(checkW.didntCorrectCheck(row, col, rowTo, colTo) || checkB.didntCorrectCheck(row, col, rowTo, colTo)){
+
+        Figure fFrom = get(row, col);
+        Figure fTo = get(rowTo, colTo);
+
+        deleteCharacter(row, col, fTo); //удаляем фигуру, которая стояла на старой позиции
+        set(rowTo, colTo, fFrom); //Поставили взятую рукой фигуру
+
+/**
+ * Надо добавить: если следующий ход - шах, то так ходить нельзя
+ * И еще надо добавить если королю шах и нынешний ход это не исправляет, то так ходить нельзя.
+ * Как можно это реализовать?
+ *      Лучше, наверное, дописать метод в Gamepad,
+ * Нужно чтобы именно наша команда не попадала под шах
+ * Эту проверку 1 можно и не делать, так как gamepad нам туда не разрешит даже поднести
+ * Теперь нужно как то проверять (будет ли шах при таком ходе)
+ * Я думаю просто дополнительно чекнуть available и вытащить тех ходы при которых шах (наступает или не проходит)
+ */
+
+        if(checkW.didntCorrectCheck() || checkB.didntCorrectCheck()){ //!!!!Если король попал под шах
             System.out.println("CHECK you can't move like that");
-            //А как поменять все обратно?
-            //Нужно создать класс History в который будут записываться все ходы из set() and deleteCharacter()
-            //Нужен какой-нибудь tree чтобы ходы записывались в последовательности ввода
-            //return;
+            //вернуться на один ход назад
+            history.roll_back(1);
+        }
+        //else if(){}
+
+        //Можно не вписывать где был, куда пошел, а юзать position, lastPosition фигуры
+        else if(pawnInterceptionLogic.ifInterception_removeEnemyPawn(fFrom)){ //Взятие на проходе
+            //Удаляем пешку противника
+            //System.out.println("Взятие на проходе");
+        }
+        else if(pawnInterceptionLogic.fixPawnJump(row, col, rowTo, colTo, fFrom)){
+            //Просто фиксирует был ли двойной прыжок пешки на первом ходе
+            //System.out.println("Двойной прыжок");
+        }
+        else if(castlingLogic.ifCastling_SwapRook(fFrom, fTo, row, col, rowTo, colTo)){
+            //Переставляет ладью при рокировке
+            //Здесь нужно не записывать ладью и кинга в history, а записать 0-0-0 or 0-0
+            //System.out.println("Переставляем ладью");
+        }
+        else if(pawnTransfLogic.fixPawn_Reached_The_End(rowTo, colTo, fFrom)){
+            //Фиксируем если пешка дошла до конца. Если да, то мы рисуем фигуры на выбор и не разрешаем больше ничего делать
+            //System.out.println("Пешка дошла до конца");
         }
 
 
-        Figure to = get(rowTo, colTo);
-        Figure from = get(row, col);
 
-        if(pawnInterceptionLogic.ifInterception_removeEnemyPawn(row, col, rowTo, colTo)){}
-        else if(pawnInterceptionLogic.fixPawnJump(row, col, rowTo, colTo)){}
-        else if(castlingLogic.ifCastling_SwapRook(from, row, col, rowTo, colTo)){}
-
-        if(to.piece==PieceEnum.empty) //Можно убрать, разницы не будет. Сделан чтобы не создавать новый пустой объект
-            set(row, col, to); //swap with empty
-        else deleteCharacter(row, col); //take (съел)
-
-        set(rowTo, colTo, from); //Поставили взятую рукой фигуру
-
-        pawnTransfLogic.pawn_Reached_The_End(rowTo, colTo);
     }
     public void move(Vector2 newPos, Vector2 toPos){
         move((int)newPos.y, (int)newPos.x, (int)toPos.y, (int)toPos.x);
@@ -181,7 +205,14 @@ public class Board {
     }
 
 
-
+    public void deleteCharacter(int row, int col, Figure to){
+        if(iS_WITHIN_BOARD(row, col)) {
+            if(to.piece==PieceEnum.empty) //Можно убрать, разницы не будет. Сделан чтобы не создавать новый пустой объект
+                set(row, col, to); //swap with empty
+            else
+                board[row][col] = createEmpty(row, col);
+        }
+    }
     public void deleteCharacter(int row, int col){
         if(iS_WITHIN_BOARD(row, col)) {
             board[row][col] = createEmpty(row, col);
@@ -190,6 +221,7 @@ public class Board {
     public void deleteCharacter(Vector2 v){
         deleteCharacter((int)v.y, (int)v.x);
     }
+
 
     public CastlingLogic getCastling(){
         return castlingLogic;

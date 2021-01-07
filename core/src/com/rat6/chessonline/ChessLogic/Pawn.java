@@ -22,7 +22,7 @@ public class Pawn extends Figure {
         boolean diagonally = (team2 != PieceEnum.empty) && (team2 == PieceEnum.white ? team == PieceEnum.black  && toRow-posRow==-1 : team == PieceEnum.white  && toRow-posRow==1) && Math.abs(posCol-toCol)==1;
 
         //Просто проверяем находится ли эта позиция to на диагонали и эта точка - это прошлое перепрыгнутая точка. Кстати, эта точка должна удаляться каждый ход
-        boolean pawnInterception = pawnInterceptionLogic.fits(posRow, posCol, toRow, toCol);
+        boolean pawnInterception = pawnInterceptionLogic.fits(posRow, posCol, toRow, toCol, this);
 
         boolean correctDist = (team==PieceEnum.white ? posRow-toRow==-1 : posRow-toRow==1);
 

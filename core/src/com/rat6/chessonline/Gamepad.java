@@ -31,19 +31,24 @@ public class Gamepad {
     private CastlingLogic castlingLogic;
     private PawnTransfLogic pawnTransfLogic;
     private PawnInterceptionLogic pawnInterceptionLogic;
+    private Check check;
 
-    public Gamepad(Main game, OrthographicCamera camera, Board board, PieceEnum team){
+    public Gamepad(Main game, OrthographicCamera camera, Board board, PieceEnum team) {
         this.game = game;
         this.camera = camera;
         this.board = board;
         this.team = team;
-        castlingLogic = board.getCastling();
-        pawnTransfLogic = board.getPawnTransformation();
-        pawnInterceptionLogic = board.getPawnInterceptionLogic();
+
         touchPoint = new Vector3();
         capturedPos = new Vector2(-1, -1);//В координатах доски [0, 7]
         lastPos = new Vector2(-1, -1);
         available = new ArrayList<Vector2>();
+
+        //Logic
+        castlingLogic = board.getCastling();
+        pawnTransfLogic = board.getPawnTransformation();
+        pawnInterceptionLogic = board.getPawnInterceptionLogic();
+        check = board.getCheck(team);
     }
 
 
@@ -91,6 +96,10 @@ public class Gamepad {
         figure = board.get(lastPos);
         figure.setVisible(false);//board.deleteCharacter(lastPos);
         available.addAll(figure.getAvailableCells());
+        for(Vector2 move: available){
+            //проверить будет ли шах, или если был шах, то проходит он или нет
+            //Как проверить будущее? Сейчас метод слишком плох. Приходится полностью игру переигрывать.
+        }
     }
 
     public void present(){
