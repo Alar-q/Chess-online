@@ -89,16 +89,29 @@ public class Gamepad {
         }
     }
 
+    List<Vector2> mbButCheckAfter = new ArrayList<Vector2>();
     public void capturePiece(PieceEnum lastPiece, Vector2 lastPos){
+        System.out.println("history");
+        board.history.write();
+        System.out.println("historyEnd");
+        game.assets.printBoard(board);
         //Схватить то что под этими координатами
         capturedPos.set(lastPos);
         capturedTextureRegion = game.assets.getCharactersTextureR(lastPiece);
         figure = board.get(lastPos);
         figure.setVisible(false);//board.deleteCharacter(lastPos);
         available.addAll(figure.getAvailableCells());
-        for(Vector2 move: available){
-            //проверить будет ли шах, или если был шах, то проходит он или нет
-            //Как проверить будущее? Сейчас метод слишком плох. Приходится полностью игру переигрывать.
+
+        //проверить будет ли шах, или если был шах, то проходит он или нет
+        //Как проверить будущее? Сейчас метод слишком плох. Приходится полностью игру переигрывать.
+        for(int i=0; i<available.size(); i++) {
+            Vector2 move = available.get(i);
+            /*
+            if(check.isAfterMoveCheck((int)capturedPos.y, (int)capturedPos.x, (int)move.y, (int)move.x)) {
+                System.out.println("Check after this move");
+                mbButCheckAfter.add(available.remove(i));
+            }
+             */
         }
     }
 

@@ -18,7 +18,17 @@ public class Board {
     private Check checkW;
     private Check checkB;
 
-    private History history;
+    public History history;
+
+    public Board copyBoard(){
+        Board board = new Board(game);
+        for(int x=0; x<8; x++){
+            for(int y=0; y<8; y++){
+                board.set(y, x, get(y, x));
+            }
+        }
+        return board;
+    }
 
     public Board(Main game){
         this.game = game;
@@ -77,7 +87,7 @@ public class Board {
         board[0][2] = new Bishop(this, PieceEnum.white, new Vector2(2, 0));
         board[0][3] = new Queen(this, PieceEnum.white, new Vector2(3, 0));
         board[0][4] = new King(this, PieceEnum.white, new Vector2(4, 0));
-        checkW = new Check(this, board[0][4], game.assets.red);
+        if(checkW==null)checkW = new Check(this, board[0][4], game.assets.red, history);
         board[0][5] = new Bishop(this, PieceEnum.white, new Vector2(5, 0));
         board[0][6] = new Knight(this, PieceEnum.white, new Vector2(6, 0));
         board[0][7] = new Rook(this, PieceEnum.white, new Vector2(7, 0));
@@ -87,7 +97,7 @@ public class Board {
         board[7][2] = new Bishop(this, PieceEnum.black, new Vector2(2, 7));
         board[7][3] = new Queen(this, PieceEnum.black, new Vector2(3, 7));
         board[7][4] = new King(this, PieceEnum.black, new Vector2(4, 7));
-        checkB = new Check(this, board[7][4], game.assets.red);
+        if(checkB==null)checkB = new Check(this, board[7][4], game.assets.red, history);
         board[7][5] = new Bishop(this, PieceEnum.black, new Vector2(5, 7));
         board[7][6] = new Knight(this, PieceEnum.black, new Vector2(6, 7));
         board[7][7] = new Rook(this, PieceEnum.black, new Vector2(7, 7));
@@ -128,15 +138,19 @@ public class Board {
  * Я думаю просто дополнительно чекнуть available и вытащить тех ходы при которых шах (наступает или не проходит)
  */
 
-        if(checkW.didntCorrectCheck() || checkB.didntCorrectCheck()){ //!!!!Если король попал под шах
-            System.out.println("CHECK you can't move like that");
-            //вернуться на один ход назад
-            history.roll_back(1);
-        }
-        //else if(){}
+        checkW.updateCheck();
+        checkB.updateCheck();
+
+        /*
+        if(checkW.didntCorrectCheck() || checkB.didntCorrectCheck()) //!!!!Если король попал под шах
+            вернуться на один ход назад
+            history.roll_back();
+        else
+         */
 
         //Можно не вписывать где был, куда пошел, а юзать position, lastPosition фигуры
-        else if(pawnInterceptionLogic.ifInterception_removeEnemyPawn(fFrom)){ //Взятие на проходе
+
+            if(pawnInterceptionLogic.ifInterception_removeEnemyPawn(fFrom)){ //Взятие на проходе
             //Удаляем пешку противника
             //System.out.println("Взятие на проходе");
         }

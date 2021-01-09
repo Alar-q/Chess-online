@@ -9,14 +9,17 @@ public class History {
 
     private Board board;
     private List<String> history;
+    private CastlingLogic castlingLogic;
 
     public History(Board board){
         this.board = board;
         history = new ArrayList<String>();
+        castlingLogic = board.getCastling();
     }
 
     // Просто воспроизводим всю игру
     public void roll_back(int n){
+
         board.clear();
         int less = history.size()-n;
 
@@ -45,9 +48,11 @@ public class History {
             //System.out.println("move from " + (col+1) + " " + (row+1) + " to " + (colTo+1) + " " + (rowTo+1) );
             board.move(row, col, rowTo, colTo);
         }
-        for(int i=0; i<n; i++){
+        for(int i=0; i<n; i++)
             history.remove(0);
-        }
+
+
+
         //history.clear();
     }
 
@@ -73,6 +78,34 @@ public class History {
         history.add(res);
     }
 
+    public void roll_back(){
+        String move = history.remove(history.size()-1);
+        String[] moves;
+        moves = move.split("-");
+        if(moves.length<2)
+            moves = move.split(":");
+        System.out.println("move from " + moves[0] + " to " + moves[1] );
+
+
+        char[] from = moves[0].toCharArray();
+        char[] to = moves[1].toCharArray();
+
+        int col, row;
+
+        if(from.length<3) {
+            col = ABC2INT(String.valueOf(from[0]));
+            row = Integer.parseInt(String.valueOf(from[1])) - 1;
+        }else {
+            col = ABC2INT(String.valueOf(from[1]));
+            row = Integer.parseInt(String.valueOf(from[2])) - 1;
+        }
+        int colTo = ABC2INT(String.valueOf(to[0]));
+        int rowTo = Integer.parseInt(String.valueOf(to[1])) - 1;
+        //System.out.println("move from " + (col+1) + " " + (row+1) + " to " + (colTo+1) + " " + (rowTo+1) );
+        //board.move(rowTo, colTo, row, col);
+        board.set(row, col, board.get(rowTo, colTo));
+        board.deleteCharacter(rowTo, colTo);
+    }
 
     // x
     // INT - в массиве
@@ -160,6 +193,12 @@ public class History {
                 return PieceEnum.bishopB;
             else
                 return PieceEnum.pawnB;
+        }
+    }
+
+    public void write(){
+        for(String s: history){
+            System.out.println(s);
         }
     }
 }
