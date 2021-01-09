@@ -21,4 +21,14 @@ public class Bishop extends Figure {
 
         return !isOwnUnderAttack(to) && diagonally;
     }
+
+    @Override
+    public Figure clone() {
+        Bishop clone = new Bishop(board, team, new Vector2(position));
+        clone.piece = piece;
+        clone.visible = visible;
+        clone.lastPosition = new Vector2(lastPosition);
+        clone.isFirstMove = isFirstMove;
+        return clone;
+    }
 }

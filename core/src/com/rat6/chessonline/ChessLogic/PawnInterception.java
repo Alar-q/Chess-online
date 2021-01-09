@@ -3,7 +3,7 @@ package com.rat6.chessonline.ChessLogic;
 import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
 
-public class PawnInterceptionLogic {
+public class PawnInterception {
 
     private Board board;
     private Vector2 interceptionPosition;
@@ -11,7 +11,7 @@ public class PawnInterceptionLogic {
     private PieceEnum team;
 
 
-    public PawnInterceptionLogic(Board board){
+    public PawnInterception(Board board){
         this.board = board;
         interceptionPosition = new Vector2();
         wasOverrun = false;
@@ -21,7 +21,7 @@ public class PawnInterceptionLogic {
     //Если это пешка
     //Если пешка прыгает на два, то мы записываем перепрыгнутую позиция
     //Else удаляем точку
-    public boolean fixPawnJump(int row, int col, int rowTo, int colTo, Figure fFrom) {
+    public boolean fixPawn2Jump(int row, int col, int rowTo, int colTo, Figure fFrom) {
         if ((fFrom.piece == PieceEnum.pawnW || fFrom.piece == PieceEnum.pawnB) && col == colTo && Math.abs(row - rowTo) == 2) {
             wasOverrun = true;
             interceptionPosition.set(col, fFrom.team == PieceEnum.white ? row + 1 : row - 1);

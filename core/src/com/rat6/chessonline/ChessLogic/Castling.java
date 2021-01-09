@@ -3,11 +3,11 @@ package com.rat6.chessonline.ChessLogic;
 import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
 
-public class CastlingLogic {
+public class Castling {
 
     public Board board;
 
-    public CastlingLogic(Board board){
+    public Castling(Board board){
         this.board = board;
     }
 
@@ -40,7 +40,7 @@ public class CastlingLogic {
             return 0;
 
 
-        if(king.isPosUnderAttack(row, col)) //if check
+        if(board.isPosUnderAttack(row, col)) //if check
             return 0;
 
         int res = 0;
@@ -69,14 +69,13 @@ public class CastlingLogic {
 
         for (int i = 1; i <= 2; i++) {
             int OffsetCol = col + (res * i);
-            //Это происходит только при swapRook.
+            // Это происходит только при swapRook.
             // Так как нельзя использовать isFirstMove, boardMove мы уже ходили и король перемещен на две клетки по x.
             if(king.position.x==OffsetCol) continue;
 
-            if (king.isPosUnderAttack(row, OffsetCol) || king.isOwnUnderAttack(new Vector2(OffsetCol, row))) {
-                System.out.println( row + " " + (col + (res * i)));
+            if (board.isPosUnderAttack(row, OffsetCol) || king.isOwnUnderAttack(new Vector2(OffsetCol, row)))
                 return 0;
-            }
+
         }
 
         return res;
@@ -90,7 +89,13 @@ public class CastlingLogic {
             int row1 = from.team == PieceEnum.white ? 0 : 7;
             int colTo1 = dir == -1 ? 3 : 5;
 
-            board.move(row1, colFrom1, row1, colTo1);
+            Figure fFrom = board.get(row1, colFrom1);
+            Figure f2 = board.get(row1, colTo1); //Это пустая клетка
+
+            board.deleteCharacter(row1, colFrom1, f2); //удаляем фигуру, которая стояла на старой позиции
+            board.set(row1, colTo1, fFrom); //Поставили взятую рукой фигуру
+
+            //board.move(row1, colFrom1, row1, colTo1);
 
             return true;
         } else

@@ -11,9 +11,9 @@ public class Board {
 
     private Figure[][] board;
 
-    private CastlingLogic castlingLogic;
-    private PawnTransfLogic pawnTransfLogic;
-    private PawnInterceptionLogic pawnInterceptionLogic;
+    private Castling castling;
+    private PawnTransf pawnTransf;
+    private PawnInterception pawnInterception;
 
     private Check checkW;
     private Check checkB;
@@ -38,9 +38,9 @@ public class Board {
 
         board = new Figure[8][8];
 
-        castlingLogic = new CastlingLogic(this);
-        pawnTransfLogic = new PawnTransfLogic(game, this);
-        pawnInterceptionLogic = new PawnInterceptionLogic(this);
+        castling = new Castling(this);
+        pawnTransf = new PawnTransf(game, this);
+        pawnInterception = new PawnInterception(this);
 
         history = new History(this);
 
@@ -59,8 +59,8 @@ public class Board {
             }
         }
 
-        if(pawnTransfLogic.isTransNow) {
-            pawnTransfLogic.present();
+        if(pawnTransf.isTransNow) {
+            pawnTransf.present();
         }
     }
 
@@ -117,9 +117,10 @@ public class Board {
 
 
     //В этот метод поступаю только те ходы которые реально будут
-    public void move(int row, int col, int rowTo, int colTo){
+    public void move(int row, int col, int rowTo, int colTo, boolean memorize){
 
-        history.move(row, col, rowTo, colTo);
+        if(memorize)
+            history.move(row, col, rowTo, colTo);
 
         Figure fFrom = get(row, col);
         Figure fTo = get(rowTo, colTo);
@@ -127,52 +128,59 @@ public class Board {
         deleteCharacter(row, col, fTo); //удаляем фигуру, которая стояла на старой позиции
         set(rowTo, colTo, fFrom); //Поставили взятую рукой фигуру
 
-/**
- * Надо добавить: если следующий ход - шах, то так ходить нельзя
- * И еще надо добавить если королю шах и нынешний ход это не исправляет, то так ходить нельзя.
- * Как можно это реализовать?
- *      Лучше, наверное, дописать метод в Gamepad,
- * Нужно чтобы именно наша команда не попадала под шах
- * Эту проверку 1 можно и не делать, так как gamepad нам туда не разрешит даже поднести
- * Теперь нужно как то проверять (будет ли шах при таком ходе)
- * Я думаю просто дополнительно чекнуть available и вытащить тех ходы при которых шах (наступает или не проходит)
- */
 
-        checkW.updateCheck();
-        checkB.updateCheck();
+        //checkW.updateCheck();checkB.updateCheck();
 
         /*
         if(checkW.didntCorrectCheck() || checkB.didntCorrectCheck()) //!!!!Если король попал под шах
             вернуться на один ход назад
-            history.roll_back();
+            history.roll_back(1);
         else
          */
 
         //Можно не вписывать где был, куда пошел, а юзать position, lastPosition фигуры
 
-            if(pawnInterceptionLogic.ifInterception_removeEnemyPawn(fFrom)){ //Взятие на проходе
+        if(pawnInterception.ifInterception_removeEnemyPawn(fFrom)){ //Взятие на проходе
             //Удаляем пешку противника
             //System.out.println("Взятие на проходе");
         }
-        else if(pawnInterceptionLogic.fixPawnJump(row, col, rowTo, colTo, fFrom)){
+        else if(pawnInterception.fixPawn2Jump(row, col, rowTo, colTo, fFrom)){
             //Просто фиксирует был ли двойной прыжок пешки на первом ходе
             //System.out.println("Двойной прыжок");
         }
-        else if(castlingLogic.ifCastling_SwapRook(fFrom, fTo, row, col, rowTo, colTo)){
+        else if(castling.ifCastling_SwapRook(fFrom, fTo, row, col, rowTo, colTo)){
             //Переставляет ладью при рокировке
             //Здесь нужно не записывать ладью и кинга в history, а записать 0-0-0 or 0-0
             //System.out.println("Переставляем ладью");
         }
-        else if(pawnTransfLogic.fixPawn_Reached_The_End(rowTo, colTo, fFrom)){
+        else if(pawnTransf.fixPawn_Reached_The_End(rowTo, colTo, fFrom)){
             //Фиксируем если пешка дошла до конца. Если да, то мы рисуем фигуры на выбор и не разрешаем больше ничего делать
             //System.out.println("Пешка дошла до конца");
         }
 
-
-
     }
-    public void move(Vector2 newPos, Vector2 toPos){
-        move((int)newPos.y, (int)newPos.x, (int)toPos.y, (int)toPos.x);
+    public void move(Vector2 newPos, Vector2 toPos, boolean memorize){
+        move((int)newPos.y, (int)newPos.x, (int)toPos.y, (int)toPos.x, memorize);
+    }
+
+
+    public boolean isPosUnderAttack(int row, int col){
+        Vector2 pos = new Vector2(col, row);
+        PieceEnum team = get(pos).team;
+
+        //Проходим по всем клеткам,
+        for(int y=0; y<8; y++){
+            for(int x=0; x<8; x++){
+                // находим фигуры вражеской команды и проверяет бьют ли они клетку
+                Figure en = get(y, x);
+                if(en.team!=team && en.canMove(pos))
+                    return true;
+            }
+        }
+        return false;
+    }
+    public boolean isPosUnderAttack(Vector2 pos){
+        return isPosUnderAttack((int)pos.y, (int)pos.x);
     }
 
 
@@ -206,17 +214,16 @@ public class Board {
     public void set(Vector2 pos, Figure f) {
         set((int) pos.y, (int) pos.x, f);
     }
+    public void set_unchanged(int row, int col, Figure f){
+        board[row][col] = f;
+    }
 
 
 
     public Figure createEmpty(int row, int col){
-        return new Figure(this, PieceEnum.empty, new Vector2(col, row)) {
-            @Override
-            public boolean canMove(Vector2 to) {
-                return false;
-            }
-        };
+        return new FigureAdapter(this, PieceEnum.empty, new Vector2(col, row));
     }
+
 
 
     public void deleteCharacter(int row, int col, Figure to){
@@ -237,12 +244,12 @@ public class Board {
     }
 
 
-    public CastlingLogic getCastling(){
-        return castlingLogic;
+    public Castling getCastling(){
+        return castling;
     }
 
-    public PawnTransfLogic getPawnTransformation(){
-        return pawnTransfLogic;
+    public PawnTransf getPawnTransformation(){
+        return pawnTransf;
     }
 
     public Check getCheck(PieceEnum team){
@@ -251,8 +258,8 @@ public class Board {
         else return checkB;
     }
 
-    public PawnInterceptionLogic getPawnInterceptionLogic(){
-        return pawnInterceptionLogic;
+    public PawnInterception getPawnInterceptionLogic(){
+        return pawnInterception;
     }
 
     public static boolean iS_WITHIN_BOARD(int row, int col){

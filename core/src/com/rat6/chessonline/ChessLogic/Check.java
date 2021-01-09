@@ -1,7 +1,11 @@
 package com.rat6.chessonline.ChessLogic;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Check {
 
@@ -31,23 +35,40 @@ public class Check {
             board.drawCharacter(king.position, tr);
     }
 
+
     /*
-    public boolean didntCorrectCheck(){
-        boolean wcb = wasCheckBefore;
-        if(updateCheck() && wcb) return true;
-        return false;
-    }
-     */
-
-
-
     public boolean isAfterMoveCheck(int row, int col, int rowTo, int colTo){
-        board.move(row, col, rowTo, colTo); //Кажется лучше сделать
-        boolean isC = king.isPosUnderAttack();
-        history.roll_back(1);
-        //updateCheck();
-        //Figure f = board.get(row, col);
-        //f.setVisible(false);
+        Figure f = board.get(row, col);
+        Figure f_clone = f.clone();
+        Figure f2 = board.get(rowTo, colTo);
+        Figure f2_clone = f2.clone();
+
+        board.set_unchanged(row, col, f_clone);
+        board.set_unchanged(rowTo, colTo, f2_clone);
+
+        board.move(row, col, rowTo, colTo, false); //Кажется лучше сделать мув здесь
+        boolean isC = king.isPosUnderAttack(); //Здесь получается именно король нашей команды
+
+        board.set_unchanged(row, col, f);
+        board.set_unchanged(rowTo, colTo, f2);
+
         return isC;
     }
+
+    public List<Vector2> remove_moves_after_which_check(List<Vector2> available, Vector2 from){
+        List<Vector2> mbButCheckAfter = new ArrayList<Vector2>();
+
+        for(int i=0; i<available.size(); i++) {
+            Vector2 move = available.get(i);
+
+            if (isAfterMoveCheck((int) from.y, (int) from.x, (int) move.y, (int) move.x)) {
+                System.out.println("Check after this move");
+                mbButCheckAfter.add(available.remove(i));
+            }
+        }
+
+        return mbButCheckAfter;
+    }
+
+     */
 }

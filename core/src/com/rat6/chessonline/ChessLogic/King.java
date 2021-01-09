@@ -6,12 +6,12 @@ import com.rat6.chessonline.Board;
 
 public class King extends Figure {
 
-    private CastlingLogic castlingLogic;
+    private Castling castling;
 
     public King(Board board, PieceEnum team, Vector2 position) {
         super(board, team, position);
         piece = team == PieceEnum.white ? PieceEnum.kingW : PieceEnum.kingB;
-        this.castlingLogic = board.getCastling();
+        this.castling = board.getCastling();
     }
 
     @Override
@@ -23,7 +23,10 @@ public class King extends Figure {
 
         boolean horizontally = posRow==toRow && Math.abs(posCol-toCol)==1;
 
-        boolean isCastling = castlingLogic.isCastling(this, position, to);
+        boolean isCastling = castling.isCastling(this, position, to);
+        if(isCastling)
+            System.out.println("castling");
+
 
         boolean vertically = Math.abs(posRow-toRow)==1 && posCol==toCol;
 
@@ -32,4 +35,13 @@ public class King extends Figure {
         return  !isOwnUnderAttack(to) && canMove;
     }
 
+    @Override
+    public Figure clone() {
+        King clone = new King(board, team, new Vector2(position));
+        clone.piece = piece;
+        clone.visible = visible;
+        clone.lastPosition = new Vector2(lastPosition);
+        clone.isFirstMove = isFirstMove;
+        return clone;
+    }
 }

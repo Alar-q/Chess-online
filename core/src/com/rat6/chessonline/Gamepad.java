@@ -28,9 +28,9 @@ public class Gamepad {
 
     private List<Vector2> available;
 
-    private CastlingLogic castlingLogic;
-    private PawnTransfLogic pawnTransfLogic;
-    private PawnInterceptionLogic pawnInterceptionLogic;
+    private Castling castling;
+    private PawnTransf pawnTransf;
+    private PawnInterception pawnInterception;
     private Check check;
 
     public Gamepad(Main game, OrthographicCamera camera, Board board, PieceEnum team) {
@@ -45,9 +45,9 @@ public class Gamepad {
         available = new ArrayList<Vector2>();
 
         //Logic
-        castlingLogic = board.getCastling();
-        pawnTransfLogic = board.getPawnTransformation();
-        pawnInterceptionLogic = board.getPawnInterceptionLogic();
+        castling = board.getCastling();
+        pawnTransf = board.getPawnTransformation();
+        pawnInterception = board.getPawnInterceptionLogic();
         check = board.getCheck(team);
     }
 
@@ -60,8 +60,8 @@ public class Gamepad {
             int col = (int) Math.floor((touchPoint.x - game.padding) / game.cellSize);
             int row = (int) Math.floor((touchPoint.y - board.boardLeftY - game.padding) / game.cellSize);
 
-            if (pawnTransfLogic.isTransNow)
-                pawnTransfLogic.onTouch(row, col);
+            if (pawnTransf.isTransNow)
+                pawnTransf.onTouch(row, col);
             else
                 onTouch(row, col);
         }
@@ -81,7 +81,7 @@ public class Gamepad {
     private void onTouchRelease(){
         if(isCaptured()) {
             if(Board.iS_WITHIN_BOARD(lastPos) && figure.canMove(lastPos)) {
-                board.move(capturedPos, lastPos);
+                board.move(capturedPos, lastPos, true);
             }
             figure.setVisible(true);
             available.clear();
@@ -91,28 +91,28 @@ public class Gamepad {
 
     List<Vector2> mbButCheckAfter = new ArrayList<Vector2>();
     public void capturePiece(PieceEnum lastPiece, Vector2 lastPos){
-        System.out.println("history");
-        board.history.write();
-        System.out.println("historyEnd");
-        game.assets.printBoard(board);
         //Схватить то что под этими координатами
         capturedPos.set(lastPos);
         capturedTextureRegion = game.assets.getCharactersTextureR(lastPiece);
         figure = board.get(lastPos);
-        figure.setVisible(false);//board.deleteCharacter(lastPos);
+        figure.setVisible(false);
         available.addAll(figure.getAvailableCells());
 
+
+/**
+ * Надо добавить: если следующий ход - шах, то так ходить нельзя
+ * И еще надо добавить если королю шах и нынешний ход это не исправляет, то так ходить нельзя.
+ * Как можно это реализовать?
+ *      Лучше, наверное, дописать метод в Gamepad,
+ * Нужно чтобы именно наша команда не попадала под шах
+ * Эту проверку 1 можно и не делать, так как gamepad нам туда не разрешит даже поднести
+ * Теперь нужно как то проверять (будет ли шах при таком ходе)
+ * Я думаю просто дополнительно чекнуть available и вытащить тех ходы при которых шах (наступает или не проходит)
+ */
         //проверить будет ли шах, или если был шах, то проходит он или нет
         //Как проверить будущее? Сейчас метод слишком плох. Приходится полностью игру переигрывать.
-        for(int i=0; i<available.size(); i++) {
-            Vector2 move = available.get(i);
-            /*
-            if(check.isAfterMoveCheck((int)capturedPos.y, (int)capturedPos.x, (int)move.y, (int)move.x)) {
-                System.out.println("Check after this move");
-                mbButCheckAfter.add(available.remove(i));
-            }
-             */
-        }
+        //check.remove_moves_after_which_check(available, lastPos);
+
     }
 
     public void present(){
@@ -127,8 +127,8 @@ public class Gamepad {
             TextureRegion tr = null;
             for (Vector2 vTo : available) {
                 tr = game.assets.green;
-                if(((figure.piece == PieceEnum.kingB || figure.piece == PieceEnum.kingW) && castlingLogic.isCastling(figure, capturedPos, vTo)) ||
-                        (board.get(vTo).piece==PieceEnum.empty && pawnInterceptionLogic.isPosIsInterception(figure, vTo)))
+                if(((figure.piece == PieceEnum.kingB || figure.piece == PieceEnum.kingW) && castling.isCastling(figure, capturedPos, vTo))
+                        || (board.get(vTo).piece==PieceEnum.empty && pawnInterception.isPosIsInterception(figure, vTo)))
                     tr = game.assets.blue;
                 board.drawCharacter((int) vTo.y, (int) vTo.x, tr);
             }

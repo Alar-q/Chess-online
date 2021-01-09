@@ -27,4 +27,14 @@ public class Queen extends Figure {
 
     }
 
+    @Override
+    public Figure clone() {
+        Queen clone = new Queen(board, team, new Vector2(position));
+        clone.piece = piece;
+        clone.visible = visible;
+        clone.lastPosition = new Vector2(lastPosition);
+        clone.isFirstMove = isFirstMove;
+        return clone;
+    }
+
 }

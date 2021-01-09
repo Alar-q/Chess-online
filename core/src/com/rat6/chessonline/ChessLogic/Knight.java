@@ -21,4 +21,13 @@ public class Knight extends Figure {
 
     }
 
+    @Override
+    public Figure clone() {
+        Knight clone = new Knight(board, team, new Vector2(position));
+        clone.piece = piece;
+        clone.visible = visible;
+        clone.lastPosition = new Vector2(lastPosition);
+        clone.isFirstMove = isFirstMove;
+        return clone;
+    }
 }

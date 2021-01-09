@@ -9,8 +9,9 @@ import java.util.List;
 public abstract class Figure {
     protected Board board;
     public boolean visible, isFirstMove;
-    public PieceEnum piece, team;;
+    public PieceEnum piece, team;
     public Vector2 position, lastPosition;
+
 
     public Figure(Board board, PieceEnum team, Vector2 position){
         this.board = board;
@@ -23,6 +24,7 @@ public abstract class Figure {
     }
 
     public abstract boolean canMove(Vector2 to);
+    public abstract Figure clone();
 
     public List<Vector2> getAvailableCells(){
         List<Vector2> available = new ArrayList<Vector2>();
@@ -94,35 +96,17 @@ public abstract class Figure {
         return true;
     }
 
-    public boolean isOwnUnderAttack(Vector2 to){
-        PieceEnum team2 = board.get(to).team;
+    public boolean isOwnUnderAttack(int row, int col){
+        PieceEnum team2 = board.get(row, col).team;
         return team == team2;
     }
-
-    public boolean isPosUnderAttack(int row, int col){
-
-        Vector2 pos = new Vector2(col, row);
-
-        //Проходит по всем клеткам,
-        for(int y=0; y<8; y++){
-            for(int x=0; x<8; x++){
-
-                Figure en = board.get(y, x);
-                // находит фигуры вражеской команды
-                // и проверяет бьют ли они клетку
-                if(en.team!=team && en.canMove(pos))
-                    return true;
-
-            }
-        }
-
-        return false;
+    public boolean isOwnUnderAttack(Vector2 to){
+        return isOwnUnderAttack((int)to.y, (int)to.x);
     }
-    public boolean isPosUnderAttack(Vector2 pos){
-        return isPosUnderAttack((int)pos.y, (int)pos.x);
-    }
+
+
     public boolean isPosUnderAttack(){
-        return isPosUnderAttack(position);
+        return board.isPosUnderAttack(position);
     }
 
 

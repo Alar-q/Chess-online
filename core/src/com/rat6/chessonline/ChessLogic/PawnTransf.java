@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
 import com.rat6.chessonline.Main;
 
-public class PawnTransfLogic {
+public class PawnTransf {
 
     private Main game;
     private Board board;
@@ -14,7 +14,7 @@ public class PawnTransfLogic {
     public Vector2 transPos;
     public PieceEnum team;
 
-    public PawnTransfLogic(Main game, Board board){
+    public PawnTransf(Main game, Board board){
         this.game = game;
         this.board = board;
         isTransNow = false;

@@ -24,6 +24,14 @@ public class Rook extends Figure {
 
     }
 
-
+    @Override
+    public Figure clone() {
+        Rook clone = new Rook(board, team, new Vector2(position));
+        clone.piece = piece;
+        clone.visible = visible;
+        clone.lastPosition = new Vector2(lastPosition);
+        clone.isFirstMove = isFirstMove;
+        return clone;
+    }
 
 }

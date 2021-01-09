@@ -4,11 +4,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
 
 public class Pawn extends Figure {
-    private PawnInterceptionLogic pawnInterceptionLogic;
+    private PawnInterception pawnInterception;
+
     public Pawn(Board board, PieceEnum team, Vector2 position) {
         super(board, team, position);
         piece = team == PieceEnum.white ? PieceEnum.pawnW : PieceEnum.pawnB;
-        pawnInterceptionLogic = board.getPawnInterceptionLogic();
+        pawnInterception = board.getPawnInterceptionLogic();
     }
 
     @Override
@@ -22,7 +23,7 @@ public class Pawn extends Figure {
         boolean diagonally = (team2 != PieceEnum.empty) && (team2 == PieceEnum.white ? team == PieceEnum.black  && toRow-posRow==-1 : team == PieceEnum.white  && toRow-posRow==1) && Math.abs(posCol-toCol)==1;
 
         //Просто проверяем находится ли эта позиция to на диагонали и эта точка - это прошлое перепрыгнутая точка. Кстати, эта точка должна удаляться каждый ход
-        boolean pawnInterception = pawnInterceptionLogic.fits(posRow, posCol, toRow, toCol, this);
+        boolean pawnInterception = this.pawnInterception.fits(posRow, posCol, toRow, toCol, this);
 
         boolean correctDist = (team==PieceEnum.white ? posRow-toRow==-1 : posRow-toRow==1);
 
@@ -40,4 +41,13 @@ public class Pawn extends Figure {
         return vertically || diagonally || pawnInterception;
     }
 
+    @Override
+    public Figure clone() {
+        Pawn clone = new Pawn(board, team, new Vector2(position));
+        clone.piece = piece;
+        clone.visible = visible;
+        clone.lastPosition = new Vector2(lastPosition);
+        clone.isFirstMove = isFirstMove;
+        return clone;
+    }
 }

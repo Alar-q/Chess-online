@@ -9,15 +9,17 @@ public class History {
 
     private Board board;
     private List<String> history;
-    private CastlingLogic castlingLogic;
+    private Castling castling;
 
     public History(Board board){
         this.board = board;
         history = new ArrayList<String>();
-        castlingLogic = board.getCastling();
+        castling = board.getCastling();
     }
 
     // Просто воспроизводим всю игру
+    //!!!!Нужно добавить случай 0-0-0 и 0-0
+    /*
     public void roll_back(int n){
 
         board.clear();
@@ -51,12 +53,16 @@ public class History {
         for(int i=0; i<n; i++)
             history.remove(0);
 
-
-
-        //history.clear();
     }
 
-    public void move(int row, int col, int rowTo, int colTo){
+     */
+
+    public void roll_back(){
+
+    }
+
+
+    public void move(int row, int col, int rowTo, int colTo) {
         String res = "";
         Figure f = board.get(row, col);
 
@@ -66,46 +72,23 @@ public class History {
         res += getFigureNaming(f);
 
         res += INT2ABS(col);
-        res += row+1; //+1 потому что осчет массива начинается с нуля
+        res += row + 1; //+1 потому что осчет массива начинается с нуля
 
-        res+=act;
+        res += act;
 
         res += INT2ABS(colTo);
-        res += rowTo+1;
+        res += rowTo + 1;
 
-        System.out.println(res);
+        if (res.equals("ke8-c8") || res.equals("ke1-c1"))
+            res = "0-0-0";
+        else if (res.equals("ke8-g8") || res.equals("ke1-g1"))
+            res = "0-0";
 
         history.add(res);
+
+        System.out.println(res);
     }
 
-    public void roll_back(){
-        String move = history.remove(history.size()-1);
-        String[] moves;
-        moves = move.split("-");
-        if(moves.length<2)
-            moves = move.split(":");
-        System.out.println("move from " + moves[0] + " to " + moves[1] );
-
-
-        char[] from = moves[0].toCharArray();
-        char[] to = moves[1].toCharArray();
-
-        int col, row;
-
-        if(from.length<3) {
-            col = ABC2INT(String.valueOf(from[0]));
-            row = Integer.parseInt(String.valueOf(from[1])) - 1;
-        }else {
-            col = ABC2INT(String.valueOf(from[1]));
-            row = Integer.parseInt(String.valueOf(from[2])) - 1;
-        }
-        int colTo = ABC2INT(String.valueOf(to[0]));
-        int rowTo = Integer.parseInt(String.valueOf(to[1])) - 1;
-        //System.out.println("move from " + (col+1) + " " + (row+1) + " to " + (colTo+1) + " " + (rowTo+1) );
-        //board.move(rowTo, colTo, row, col);
-        board.set(row, col, board.get(rowTo, colTo));
-        board.deleteCharacter(rowTo, colTo);
-    }
 
     // x
     // INT - в массиве
