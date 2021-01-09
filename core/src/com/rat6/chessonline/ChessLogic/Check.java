@@ -13,21 +13,18 @@ public class Check {
     private boolean wasCheckBefore;
     private Figure king;
     private TextureRegion tr;
-    private History history;
 
-    public Check(Board board, Figure king, TextureRegion tr, History history){
+    public Check(Board board, Figure king, TextureRegion tr){
         this.board = board;
         wasCheckBefore = false;
         this.king = king;
         this.tr = tr;
-        this.history = history;
     }
 
-    public boolean updateCheck(){
+    public boolean fixCheck(){
         wasCheckBefore = king.isPosUnderAttack(); //Проходит по всем клеткам, находит фигуры вражеской команды и проверяет бьют ли они клетку
         return wasCheckBefore;
     }
-
 
 
     public void present(){
@@ -36,23 +33,30 @@ public class Check {
     }
 
 
-    /*
     public boolean isAfterMoveCheck(int row, int col, int rowTo, int colTo){
         Figure f = board.get(row, col);
         Figure f_clone = f.clone();
         Figure f2 = board.get(rowTo, colTo);
-        Figure f2_clone = f2.clone();
+        Figure empty = board.createEmpty(row, col);
 
-        board.set_unchanged(row, col, f_clone);
-        board.set_unchanged(rowTo, colTo, f2_clone);
+        board.set_unchanged(row, col, empty); //удаляем фигуру, которая стояла на старой позиции
+        board.set_unchanged(rowTo, colTo, f_clone); //Поставили взятую рукой фигуру
 
-        board.move(row, col, rowTo, colTo, false); //Кажется лучше сделать мув здесь
-        boolean isC = king.isPosUnderAttack(); //Здесь получается именно король нашей команды
+        boolean isC; //Здесь получается именно король нашей команды
+        if(f.piece == king.piece)
+            isC = board.isPosUnderAttack(rowTo, colTo, king.team);
+        else
+            isC = king.isPosUnderAttack();
 
+        //Вернули все на свои места
         board.set_unchanged(row, col, f);
         board.set_unchanged(rowTo, colTo, f2);
 
         return isC;
+    }
+
+    public boolean isAfterMoveCheck(Vector2 from, Vector2 to){
+        return isAfterMoveCheck((int)from.y, (int)from.x, (int)to.y, (int)to.x);
     }
 
     public List<Vector2> remove_moves_after_which_check(List<Vector2> available, Vector2 from){
@@ -62,13 +66,16 @@ public class Check {
             Vector2 move = available.get(i);
 
             if (isAfterMoveCheck((int) from.y, (int) from.x, (int) move.y, (int) move.x)) {
-                System.out.println("Check after this move");
-                mbButCheckAfter.add(available.remove(i));
+                mbButCheckAfter.add(move);
             }
         }
+
+        available.removeAll(mbButCheckAfter);
 
         return mbButCheckAfter;
     }
 
-     */
+    public void setKing(Figure king){
+        this.king = king;
+    }
 }

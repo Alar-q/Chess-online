@@ -47,7 +47,9 @@ public class PawnInterception {
 
 
     public boolean ifInterception_removeEnemyPawn(int row, int col, int rowTo, int colTo, Figure figFrom){
-        if((figFrom.piece == PieceEnum.pawnW || figFrom.piece == PieceEnum.pawnB) && fits(row, col, rowTo, colTo, figFrom)){
+        boolean fisting = fits(row, col, rowTo, colTo, figFrom);
+
+        if((figFrom.piece == PieceEnum.pawnW || figFrom.piece == PieceEnum.pawnB) && fisting){
             int i = figFrom.team == PieceEnum.white ? -1 : 1;
             interceptionPosition.add(0, i);
             board.deleteCharacter(interceptionPosition);

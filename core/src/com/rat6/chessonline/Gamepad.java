@@ -26,7 +26,7 @@ public class Gamepad {
 
     private Figure figure;
 
-    private List<Vector2> available;
+    private List<Vector2> available, mbButCheckAfter;
 
     private Castling castling;
     private PawnTransf pawnTransf;
@@ -42,7 +42,9 @@ public class Gamepad {
         touchPoint = new Vector3();
         capturedPos = new Vector2(-1, -1);//В координатах доски [0, 7]
         lastPos = new Vector2(-1, -1);
+
         available = new ArrayList<Vector2>();
+        mbButCheckAfter = new ArrayList<Vector2>();
 
         //Logic
         castling = board.getCastling();
@@ -72,7 +74,7 @@ public class Gamepad {
         lastPos.set(col, row);
         Figure f = board.get(row, col);
         PieceEnum lastPiece = f.piece;
-        //if(f.team!=team) return; //Ходить только за свою команду
+        if(f.team!=team) return; //Ходить только за свою команду
         if (!isCaptured() && lastPiece != PieceEnum.empty && Board.iS_WITHIN_BOARD(row, col))
             capturePiece(lastPiece, lastPos);
 
@@ -80,8 +82,8 @@ public class Gamepad {
 
     private void onTouchRelease(){
         if(isCaptured()) {
-            if(Board.iS_WITHIN_BOARD(lastPos) && figure.canMove(lastPos)) {
-                board.move(capturedPos, lastPos, true);
+            if(Board.iS_WITHIN_BOARD(lastPos) && figure.canMove(lastPos) && !check.isAfterMoveCheck(capturedPos, lastPos)) {
+                board.move(capturedPos, lastPos);
             }
             figure.setVisible(true);
             available.clear();
@@ -89,7 +91,6 @@ public class Gamepad {
         }
     }
 
-    List<Vector2> mbButCheckAfter = new ArrayList<Vector2>();
     public void capturePiece(PieceEnum lastPiece, Vector2 lastPos){
         //Схватить то что под этими координатами
         capturedPos.set(lastPos);
@@ -98,30 +99,20 @@ public class Gamepad {
         figure.setVisible(false);
         available.addAll(figure.getAvailableCells());
 
-
-/**
- * Надо добавить: если следующий ход - шах, то так ходить нельзя
- * И еще надо добавить если королю шах и нынешний ход это не исправляет, то так ходить нельзя.
- * Как можно это реализовать?
- *      Лучше, наверное, дописать метод в Gamepad,
- * Нужно чтобы именно наша команда не попадала под шах
- * Эту проверку 1 можно и не делать, так как gamepad нам туда не разрешит даже поднести
- * Теперь нужно как то проверять (будет ли шах при таком ходе)
- * Я думаю просто дополнительно чекнуть available и вытащить тех ходы при которых шах (наступает или не проходит)
- */
-        //проверить будет ли шах, или если был шах, то проходит он или нет
-        //Как проверить будущее? Сейчас метод слишком плох. Приходится полностью игру переигрывать.
-        //check.remove_moves_after_which_check(available, lastPos);
-
+        mbButCheckAfter.clear();
+        mbButCheckAfter = check.remove_moves_after_which_check(available, lastPos);
     }
 
     public void present(){
         if(isCaptured()){
             game.batcher.draw(capturedTextureRegion, touchPoint.x-game.cellSize/2, touchPoint.y-game.cellSize/2, game.cellSize, game.cellSize);
         }
+        if(pawnTransf.isTransNow) {
+            pawnTransf.present();
+        }
     }
 
-    public void highlight(){
+    public void highlight_available(){
         if(isCaptured()) {
             //Подсвечивать места куда можно ходить
             TextureRegion tr = null;
@@ -131,6 +122,9 @@ public class Gamepad {
                         || (board.get(vTo).piece==PieceEnum.empty && pawnInterception.isPosIsInterception(figure, vTo)))
                     tr = game.assets.blue;
                 board.drawCharacter((int) vTo.y, (int) vTo.x, tr);
+            }
+            for (Vector2 vTo : mbButCheckAfter){
+                board.drawCharacter((int) vTo.y, (int) vTo.x, game.assets.red);
             }
         }
     }

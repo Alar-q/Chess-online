@@ -18,17 +18,9 @@ public class Board {
     private Check checkW;
     private Check checkB;
 
-    public History history;
+    private History history;
 
-    public Board copyBoard(){
-        Board board = new Board(game);
-        for(int x=0; x<8; x++){
-            for(int y=0; y<8; y++){
-                board.set(y, x, get(y, x));
-            }
-        }
-        return board;
-    }
+    public PieceEnum turn = PieceEnum.white;
 
     public Board(Main game){
         this.game = game;
@@ -59,12 +51,10 @@ public class Board {
             }
         }
 
-        if(pawnTransf.isTransNow) {
-            pawnTransf.present();
-        }
+
     }
 
-    public void highlight(){
+    public void highlight_check(){
         checkW.present();
         checkB.present();
     }
@@ -86,8 +76,14 @@ public class Board {
         board[0][1] = new Knight(this, PieceEnum.white, new Vector2(1, 0));
         board[0][2] = new Bishop(this, PieceEnum.white, new Vector2(2, 0));
         board[0][3] = new Queen(this, PieceEnum.white, new Vector2(3, 0));
-        board[0][4] = new King(this, PieceEnum.white, new Vector2(4, 0));
-        if(checkW==null)checkW = new Check(this, board[0][4], game.assets.red, history);
+
+        King kingW = new King(this, PieceEnum.white, new Vector2(4, 0));
+        board[0][4] = kingW;
+        if(checkW==null)
+            checkW = new Check(this, kingW, game.assets.red);
+        else
+            checkW.setKing(kingW);
+
         board[0][5] = new Bishop(this, PieceEnum.white, new Vector2(5, 0));
         board[0][6] = new Knight(this, PieceEnum.white, new Vector2(6, 0));
         board[0][7] = new Rook(this, PieceEnum.white, new Vector2(7, 0));
@@ -96,8 +92,14 @@ public class Board {
         board[7][1] = new Knight(this, PieceEnum.black, new Vector2(1, 7));
         board[7][2] = new Bishop(this, PieceEnum.black, new Vector2(2, 7));
         board[7][3] = new Queen(this, PieceEnum.black, new Vector2(3, 7));
-        board[7][4] = new King(this, PieceEnum.black, new Vector2(4, 7));
-        if(checkB==null)checkB = new Check(this, board[7][4], game.assets.red, history);
+
+        King kingB = new King(this, PieceEnum.black, new Vector2(4, 7));
+        board[7][4] = kingB;
+        if(checkB==null)
+            checkB = new Check(this, kingB, game.assets.red);
+        else
+            checkB.setKing(kingB);
+
         board[7][5] = new Bishop(this, PieceEnum.black, new Vector2(5, 7));
         board[7][6] = new Knight(this, PieceEnum.black, new Vector2(6, 7));
         board[7][7] = new Rook(this, PieceEnum.black, new Vector2(7, 7));
@@ -117,10 +119,9 @@ public class Board {
 
 
     //В этот метод поступаю только те ходы которые реально будут
-    public void move(int row, int col, int rowTo, int colTo, boolean memorize){
+    public void move(int row, int col, int rowTo, int colTo){
 
-        if(memorize)
-            history.move(row, col, rowTo, colTo);
+        history.move(row, col, rowTo, colTo);
 
         Figure fFrom = get(row, col);
         Figure fTo = get(rowTo, colTo);
@@ -128,45 +129,36 @@ public class Board {
         deleteCharacter(row, col, fTo); //удаляем фигуру, которая стояла на старой позиции
         set(rowTo, colTo, fFrom); //Поставили взятую рукой фигуру
 
-
-        //checkW.updateCheck();checkB.updateCheck();
-
-        /*
-        if(checkW.didntCorrectCheck() || checkB.didntCorrectCheck()) //!!!!Если король попал под шах
-            вернуться на один ход назад
-            history.roll_back(1);
-        else
-         */
-
         //Можно не вписывать где был, куда пошел, а юзать position, lastPosition фигуры
 
-        if(pawnInterception.ifInterception_removeEnemyPawn(fFrom)){ //Взятие на проходе
+        if(pawnInterception.ifInterception_removeEnemyPawn(row, col, rowTo, colTo, fFrom)){ //Взятие на проходе
             //Удаляем пешку противника
-            //System.out.println("Взятие на проходе");
         }
         else if(pawnInterception.fixPawn2Jump(row, col, rowTo, colTo, fFrom)){
             //Просто фиксирует был ли двойной прыжок пешки на первом ходе
-            //System.out.println("Двойной прыжок");
-        }
-        else if(castling.ifCastling_SwapRook(fFrom, fTo, row, col, rowTo, colTo)){
-            //Переставляет ладью при рокировке
-            //Здесь нужно не записывать ладью и кинга в history, а записать 0-0-0 or 0-0
-            //System.out.println("Переставляем ладью");
+            //Обязательно должен быть после первой проверки, потому что меняется значение был ли двойной прыжок до этого
         }
         else if(pawnTransf.fixPawn_Reached_The_End(rowTo, colTo, fFrom)){
             //Фиксируем если пешка дошла до конца. Если да, то мы рисуем фигуры на выбор и не разрешаем больше ничего делать
-            //System.out.println("Пешка дошла до конца");
+        }
+        else if(castling.ifCastling_SwapRook(fFrom, fTo, row, col, rowTo, colTo)){
+            //Переставляет ладью при рокировке
         }
 
+
+        checkW.fixCheck();
+        checkB.fixCheck();
+
+        if(turn==PieceEnum.white) turn = PieceEnum.black;
+        else turn = PieceEnum.white;
     }
-    public void move(Vector2 newPos, Vector2 toPos, boolean memorize){
-        move((int)newPos.y, (int)newPos.x, (int)toPos.y, (int)toPos.x, memorize);
+    public void move(Vector2 newPos, Vector2 toPos){
+        move((int)newPos.y, (int)newPos.x, (int)toPos.y, (int)toPos.x);
     }
 
 
-    public boolean isPosUnderAttack(int row, int col){
+    public boolean isPosUnderAttack(int row, int col, PieceEnum team){
         Vector2 pos = new Vector2(col, row);
-        PieceEnum team = get(pos).team;
 
         //Проходим по всем клеткам,
         for(int y=0; y<8; y++){
@@ -179,8 +171,8 @@ public class Board {
         }
         return false;
     }
-    public boolean isPosUnderAttack(Vector2 pos){
-        return isPosUnderAttack((int)pos.y, (int)pos.x);
+    public boolean isPosUnderAttack(Vector2 pos, PieceEnum team){
+        return isPosUnderAttack((int)pos.y, (int)pos.x, team);
     }
 
 

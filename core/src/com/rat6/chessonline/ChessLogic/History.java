@@ -18,8 +18,8 @@ public class History {
     }
 
     // Просто воспроизводим всю игру
-    //!!!!Нужно добавить случай 0-0-0 и 0-0
-    /*
+    //!!!!Нужно добавить что делать при случаи 0-0-0 и 0-0
+
     public void roll_back(int n){
 
         board.clear();
@@ -55,11 +55,7 @@ public class History {
 
     }
 
-     */
 
-    public void roll_back(){
-
-    }
 
 
     public void move(int row, int col, int rowTo, int colTo) {

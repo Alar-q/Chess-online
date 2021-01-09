@@ -24,9 +24,6 @@ public class King extends Figure {
         boolean horizontally = posRow==toRow && Math.abs(posCol-toCol)==1;
 
         boolean isCastling = castling.isCastling(this, position, to);
-        if(isCastling)
-            System.out.println("castling");
-
 
         boolean vertically = Math.abs(posRow-toRow)==1 && posCol==toCol;
 

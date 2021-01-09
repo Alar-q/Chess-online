@@ -106,7 +106,7 @@ public abstract class Figure {
 
 
     public boolean isPosUnderAttack(){
-        return board.isPosUnderAttack(position);
+        return board.isPosUnderAttack(position, team);
     }
 
 

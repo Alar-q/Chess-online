@@ -5,18 +5,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.ChessLogic.PieceEnum;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainMenuScreen extends ScreenAdapter {
     private Main game;
     private OrthographicCamera camera;
 
     private Board board;
-    private Gamepad gamepad;
+    private Gamepad gamepadW;
+    private Gamepad gamepadB;
 
     public MainMenuScreen(Main game){
         this.game = game;
@@ -25,7 +22,8 @@ public class MainMenuScreen extends ScreenAdapter {
         camera.position.set(game.WORLD_WIDTH/2, game.WORLD_HEIGHT/2, 0);
 
         board = new Board(game);
-        gamepad = new Gamepad(game, camera, board, PieceEnum.white);
+        gamepadW = new Gamepad(game, camera, board, PieceEnum.white);
+        gamepadB = new Gamepad(game, camera, board, PieceEnum.black);
     }
 
     @Override
@@ -36,7 +34,12 @@ public class MainMenuScreen extends ScreenAdapter {
 
     private void update(){
         Input in = Gdx.input;
-        gamepad.update(in);
+        if(board.turn==PieceEnum.white) {
+            gamepadW.update(in);
+        }
+        else{
+            gamepadB.update(in);
+        }
     }
 
     private void present(){
@@ -55,10 +58,12 @@ public class MainMenuScreen extends ScreenAdapter {
         game.batcher.enableBlending();
         game.batcher.begin();
 
-        gamepad.highlight(); //Available positions
-        board.highlight(); //Check
+        gamepadW.highlight_available();
+        board.highlight_check();
+
         board.present(); //draw figures
-        gamepad.present(); //one captured figure under finger
+        gamepadW.present(); //one captured figure under finger
+        gamepadB.present(); //one captured figure under finger
 
         game.batcher.end();
     }

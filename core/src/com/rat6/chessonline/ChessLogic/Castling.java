@@ -40,7 +40,7 @@ public class Castling {
             return 0;
 
 
-        if(board.isPosUnderAttack(row, col)) //if check
+        if(board.isPosUnderAttack(row, col, king.team)) //if check
             return 0;
 
         int res = 0;
@@ -73,7 +73,7 @@ public class Castling {
             // Так как нельзя использовать isFirstMove, boardMove мы уже ходили и король перемещен на две клетки по x.
             if(king.position.x==OffsetCol) continue;
 
-            if (board.isPosUnderAttack(row, OffsetCol) || king.isOwnUnderAttack(new Vector2(OffsetCol, row)))
+            if (board.isPosUnderAttack(row, OffsetCol, king.team) || king.isOwnUnderAttack(new Vector2(OffsetCol, row)))
                 return 0;
 
         }
