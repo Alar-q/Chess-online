@@ -21,8 +21,8 @@ public class MenuScreen extends ScreenAdapter {
     public MenuScreen(Main game){
         this.game = game;
 
-        camera = new OrthographicCamera(game.WORLD_WIDTH, game.WORLD_HEIGHT);
-        camera.position.set(game.WORLD_WIDTH/2, game.WORLD_HEIGHT/2, 0);
+        camera = new OrthographicCamera(WIDTH, HEIGHT);
+        camera.position.set(WIDTH/2, HEIGHT/2, 0);
 
 
     }
@@ -40,13 +40,15 @@ public class MenuScreen extends ScreenAdapter {
 
     }
 
+
+    float width = 8, height = 1.5f, distance = 0.25f, startHeight = 2.5f;
+
     private void present(){
         GL20 gl = Gdx.gl;
         gl.glClearColor(0, 0, 0, 1);
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
         game.batcher.setProjectionMatrix(camera.combined);
-
         game.batcher.disableBlending();
         game.batcher.begin();
 
@@ -57,7 +59,10 @@ public class MenuScreen extends ScreenAdapter {
         game.batcher.enableBlending();
         game.batcher.begin();
 
-
+        for(int i=0; i<5; i++) {
+            game.batcher.draw(game.assets.blue, WIDTH - width*2, startHeight + (height * i) + (distance * i), width, height);
+        }
         game.batcher.end();
     }
+
 }

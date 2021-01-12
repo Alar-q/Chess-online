@@ -28,8 +28,9 @@ public class Check {
 
 
     public void present(){
-        if(wasCheckBefore)
+        if(wasCheckBefore) {
             board.drawCharacter(king.position, tr);
+        }
     }
 
 

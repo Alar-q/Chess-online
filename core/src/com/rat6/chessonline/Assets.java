@@ -36,7 +36,7 @@ public class Assets {
 
         green = new TextureRegion(atlas, 704, 0, 52, 52);
         blue = new TextureRegion(atlas, 640, 0, 52, 52);
-        red = new TextureRegion(atlas, 640, 0, 52, 52);
+        red = new TextureRegion(atlas, 768, 0, 52, 52);
 
         bishopB = new TextureRegion(atlas, 512, 64, 64, 64);
         bishopW = new TextureRegion(atlas, 576, 64, 64, 64);

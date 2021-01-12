@@ -34,12 +34,11 @@ public class MainGameScreen extends ScreenAdapter {
 
     private void update(){
         Input in = Gdx.input;
-        if(board.turn==PieceEnum.white) {
+        if(board.turn==PieceEnum.white)
             gamepadW.update(in);
-        }
-        else{
+        else
             gamepadB.update(in);
-        }
+
     }
 
     private void present(){

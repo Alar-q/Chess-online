@@ -2,6 +2,7 @@ package com.rat6.chessonline;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.rat6.chessonline.menuScreens.MenuScreen;
 
 public class Main extends Game {
 	public float WORLD_WIDTH = 451, WORLD_HEIGHT;
@@ -14,7 +15,7 @@ public class Main extends Game {
 		batcher = new SpriteBatch();
 		assets = new Assets();
 		setHeight();
-		setScreen(new MainGameScreen(this));
+		setScreen(new MenuScreen(this));//MainGameScreen(this));
 	}
 
 	@Override
