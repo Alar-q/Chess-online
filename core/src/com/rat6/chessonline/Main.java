@@ -14,7 +14,7 @@ public class Main extends Game {
 		batcher = new SpriteBatch();
 		assets = new Assets();
 		setHeight();
-		setScreen(new MainMenuScreen(this));
+		setScreen(new MainGameScreen(this));
 	}
 
 	@Override

@@ -2,25 +2,25 @@ package com.rat6.chessonline;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.rat6.chessonline.ChessLogic.*;
+import com.rat6.chessonline.chessLogic.FigureAdapter;
 
 public class Board {
 
     private Main game;
     public float boardSize, boardLeftY;
 
-    private Figure[][] board;
+    private com.rat6.chessonline.chessLogic.Figure[][] board;
 
-    private Castling castling;
-    private PawnTransf pawnTransf;
-    private PawnInterception pawnInterception;
+    private com.rat6.chessonline.chessLogic.Castling castling;
+    private com.rat6.chessonline.chessLogic.PawnTransf pawnTransf;
+    private com.rat6.chessonline.chessLogic.PawnInterception pawnInterception;
 
-    private Check checkW;
-    private Check checkB;
+    private com.rat6.chessonline.chessLogic.Check checkW;
+    private com.rat6.chessonline.chessLogic.Check checkB;
 
-    private History history;
+    private com.rat6.chessonline.chessLogic.History history;
 
-    public PieceEnum turn = PieceEnum.white;
+    public com.rat6.chessonline.chessLogic.PieceEnum turn = com.rat6.chessonline.chessLogic.PieceEnum.white;
 
     public Board(Main game){
         this.game = game;
@@ -28,13 +28,13 @@ public class Board {
         boardSize = game.WORLD_WIDTH;
         boardLeftY = game.WORLD_HEIGHT/2-(boardSize/2);
 
-        board = new Figure[8][8];
+        board = new com.rat6.chessonline.chessLogic.Figure[8][8];
 
-        castling = new Castling(this);
-        pawnTransf = new PawnTransf(game, this);
-        pawnInterception = new PawnInterception(this);
+        castling = new com.rat6.chessonline.chessLogic.Castling(this);
+        pawnTransf = new com.rat6.chessonline.chessLogic.PawnTransf(game, this);
+        pawnInterception = new com.rat6.chessonline.chessLogic.PawnInterception(this);
 
-        history = new History(this);
+        history = new com.rat6.chessonline.chessLogic.History(this);
 
         clear();
     }
@@ -44,8 +44,8 @@ public class Board {
     public void present(){
         for(int y=0; y<8; y++) {//y-row, x-col
             for (int x = 0; x < 8; x++) {
-                Figure f = board[y][x];
-                if(f.team == PieceEnum.empty || !f.visible) continue;
+                com.rat6.chessonline.chessLogic.Figure f = board[y][x];
+                if(f.team == com.rat6.chessonline.chessLogic.PieceEnum.empty || !f.visible) continue;
                 TextureRegion tr = game.assets.getCharactersTextureR(f.piece);
                 drawCharacter(y, x, tr);
             }
@@ -68,41 +68,41 @@ public class Board {
         }
         //pawns
         for(int i=0; i<8; i++)
-            board[1][i] = new Pawn(this, PieceEnum.white, new Vector2(i, 1));
+            board[1][i] = new com.rat6.chessonline.chessLogic.Pawn(this, com.rat6.chessonline.chessLogic.PieceEnum.white, new Vector2(i, 1));
         for(int i=0; i<8; i++)
-            board[6][i] = new Pawn(this, PieceEnum.black, new Vector2(i, 6));
+            board[6][i] = new com.rat6.chessonline.chessLogic.Pawn(this, com.rat6.chessonline.chessLogic.PieceEnum.black, new Vector2(i, 6));
 
-        board[0][0] = new Rook(this, PieceEnum.white, new Vector2(0, 0));
-        board[0][1] = new Knight(this, PieceEnum.white, new Vector2(1, 0));
-        board[0][2] = new Bishop(this, PieceEnum.white, new Vector2(2, 0));
-        board[0][3] = new Queen(this, PieceEnum.white, new Vector2(3, 0));
+        board[0][0] = new com.rat6.chessonline.chessLogic.Rook(this, com.rat6.chessonline.chessLogic.PieceEnum.white, new Vector2(0, 0));
+        board[0][1] = new com.rat6.chessonline.chessLogic.Knight(this, com.rat6.chessonline.chessLogic.PieceEnum.white, new Vector2(1, 0));
+        board[0][2] = new com.rat6.chessonline.chessLogic.Bishop(this, com.rat6.chessonline.chessLogic.PieceEnum.white, new Vector2(2, 0));
+        board[0][3] = new com.rat6.chessonline.chessLogic.Queen(this, com.rat6.chessonline.chessLogic.PieceEnum.white, new Vector2(3, 0));
 
-        King kingW = new King(this, PieceEnum.white, new Vector2(4, 0));
+        com.rat6.chessonline.chessLogic.King kingW = new com.rat6.chessonline.chessLogic.King(this, com.rat6.chessonline.chessLogic.PieceEnum.white, new Vector2(4, 0));
         board[0][4] = kingW;
         if(checkW==null)
-            checkW = new Check(this, kingW, game.assets.red);
+            checkW = new com.rat6.chessonline.chessLogic.Check(this, kingW, game.assets.red);
         else
             checkW.setKing(kingW);
 
-        board[0][5] = new Bishop(this, PieceEnum.white, new Vector2(5, 0));
-        board[0][6] = new Knight(this, PieceEnum.white, new Vector2(6, 0));
-        board[0][7] = new Rook(this, PieceEnum.white, new Vector2(7, 0));
+        board[0][5] = new com.rat6.chessonline.chessLogic.Bishop(this, com.rat6.chessonline.chessLogic.PieceEnum.white, new Vector2(5, 0));
+        board[0][6] = new com.rat6.chessonline.chessLogic.Knight(this, com.rat6.chessonline.chessLogic.PieceEnum.white, new Vector2(6, 0));
+        board[0][7] = new com.rat6.chessonline.chessLogic.Rook(this, com.rat6.chessonline.chessLogic.PieceEnum.white, new Vector2(7, 0));
 
-        board[7][0] = new Rook(this, PieceEnum.black, new Vector2(0, 7));
-        board[7][1] = new Knight(this, PieceEnum.black, new Vector2(1, 7));
-        board[7][2] = new Bishop(this, PieceEnum.black, new Vector2(2, 7));
-        board[7][3] = new Queen(this, PieceEnum.black, new Vector2(3, 7));
+        board[7][0] = new com.rat6.chessonline.chessLogic.Rook(this, com.rat6.chessonline.chessLogic.PieceEnum.black, new Vector2(0, 7));
+        board[7][1] = new com.rat6.chessonline.chessLogic.Knight(this, com.rat6.chessonline.chessLogic.PieceEnum.black, new Vector2(1, 7));
+        board[7][2] = new com.rat6.chessonline.chessLogic.Bishop(this, com.rat6.chessonline.chessLogic.PieceEnum.black, new Vector2(2, 7));
+        board[7][3] = new com.rat6.chessonline.chessLogic.Queen(this, com.rat6.chessonline.chessLogic.PieceEnum.black, new Vector2(3, 7));
 
-        King kingB = new King(this, PieceEnum.black, new Vector2(4, 7));
+        com.rat6.chessonline.chessLogic.King kingB = new com.rat6.chessonline.chessLogic.King(this, com.rat6.chessonline.chessLogic.PieceEnum.black, new Vector2(4, 7));
         board[7][4] = kingB;
         if(checkB==null)
-            checkB = new Check(this, kingB, game.assets.red);
+            checkB = new com.rat6.chessonline.chessLogic.Check(this, kingB, game.assets.red);
         else
             checkB.setKing(kingB);
 
-        board[7][5] = new Bishop(this, PieceEnum.black, new Vector2(5, 7));
-        board[7][6] = new Knight(this, PieceEnum.black, new Vector2(6, 7));
-        board[7][7] = new Rook(this, PieceEnum.black, new Vector2(7, 7));
+        board[7][5] = new com.rat6.chessonline.chessLogic.Bishop(this, com.rat6.chessonline.chessLogic.PieceEnum.black, new Vector2(5, 7));
+        board[7][6] = new com.rat6.chessonline.chessLogic.Knight(this, com.rat6.chessonline.chessLogic.PieceEnum.black, new Vector2(6, 7));
+        board[7][7] = new com.rat6.chessonline.chessLogic.Rook(this, com.rat6.chessonline.chessLogic.PieceEnum.black, new Vector2(7, 7));
     }
 
 
@@ -123,8 +123,8 @@ public class Board {
 
         history.move(row, col, rowTo, colTo);
 
-        Figure fFrom = get(row, col);
-        Figure fTo = get(rowTo, colTo);
+        com.rat6.chessonline.chessLogic.Figure fFrom = get(row, col);
+        com.rat6.chessonline.chessLogic.Figure fTo = get(rowTo, colTo);
 
         deleteCharacter(row, col, fTo); //удаляем фигуру, которая стояла на старой позиции
         set(rowTo, colTo, fFrom); //Поставили взятую рукой фигуру
@@ -149,78 +149,78 @@ public class Board {
         checkW.fixCheck();
         checkB.fixCheck();
 
-        if(turn==PieceEnum.white) turn = PieceEnum.black;
-        else turn = PieceEnum.white;
+        if(turn== com.rat6.chessonline.chessLogic.PieceEnum.white) turn = com.rat6.chessonline.chessLogic.PieceEnum.black;
+        else turn = com.rat6.chessonline.chessLogic.PieceEnum.white;
     }
     public void move(Vector2 newPos, Vector2 toPos){
         move((int)newPos.y, (int)newPos.x, (int)toPos.y, (int)toPos.x);
     }
 
 
-    public boolean isPosUnderAttack(int row, int col, PieceEnum team){
+    public boolean isPosUnderAttack(int row, int col, com.rat6.chessonline.chessLogic.PieceEnum team){
         Vector2 pos = new Vector2(col, row);
 
         //Проходим по всем клеткам,
         for(int y=0; y<8; y++){
             for(int x=0; x<8; x++){
                 // находим фигуры вражеской команды и проверяет бьют ли они клетку
-                Figure en = get(y, x);
+                com.rat6.chessonline.chessLogic.Figure en = get(y, x);
                 if(en.team!=team && en.canMove(pos))
                     return true;
             }
         }
         return false;
     }
-    public boolean isPosUnderAttack(Vector2 pos, PieceEnum team){
+    public boolean isPosUnderAttack(Vector2 pos, com.rat6.chessonline.chessLogic.PieceEnum team){
         return isPosUnderAttack((int)pos.y, (int)pos.x, team);
     }
 
 
 
-    public PieceEnum getChessPiece(int row, int col){
+    public com.rat6.chessonline.chessLogic.PieceEnum getChessPiece(int row, int col){
         if(iS_WITHIN_BOARD(row, col))
             return board[row][col].piece;
-        return PieceEnum.empty;
+        return com.rat6.chessonline.chessLogic.PieceEnum.empty;
     }
-    public PieceEnum getChessPiece(Vector2 pos){
+    public com.rat6.chessonline.chessLogic.PieceEnum getChessPiece(Vector2 pos){
         return getChessPiece((int)pos.y, (int)pos.x);
     }
 
 
 
-    public Figure get(int row, int col){
+    public com.rat6.chessonline.chessLogic.Figure get(int row, int col){
         if(iS_WITHIN_BOARD(row, col))
             return board[row][col];
         return createEmpty(row, col);
     }
-    public Figure get(Vector2 to) {
+    public com.rat6.chessonline.chessLogic.Figure get(Vector2 to) {
         return get((int) to.y, (int) to.x);
     }
 
 
 
-    public void set(int row, int col, Figure f){
+    public void set(int row, int col, com.rat6.chessonline.chessLogic.Figure f){
         f.setPosition(row, col);
         board[row][col] = f;
     }
-    public void set(Vector2 pos, Figure f) {
+    public void set(Vector2 pos, com.rat6.chessonline.chessLogic.Figure f) {
         set((int) pos.y, (int) pos.x, f);
     }
-    public void set_unchanged(int row, int col, Figure f){
+    public void set_unchanged(int row, int col, com.rat6.chessonline.chessLogic.Figure f){
         board[row][col] = f;
     }
 
 
 
-    public Figure createEmpty(int row, int col){
-        return new FigureAdapter(this, PieceEnum.empty, new Vector2(col, row));
+    public com.rat6.chessonline.chessLogic.Figure createEmpty(int row, int col){
+        return new FigureAdapter(this, com.rat6.chessonline.chessLogic.PieceEnum.empty, new Vector2(col, row));
     }
 
 
 
-    public void deleteCharacter(int row, int col, Figure to){
+    public void deleteCharacter(int row, int col, com.rat6.chessonline.chessLogic.Figure to){
         if(iS_WITHIN_BOARD(row, col)) {
-            if(to.piece==PieceEnum.empty) //Можно убрать, разницы не будет. Сделан чтобы не создавать новый пустой объект
+            if(to.piece== com.rat6.chessonline.chessLogic.PieceEnum.empty) //Можно убрать, разницы не будет. Сделан чтобы не создавать новый пустой объект
                 set(row, col, to); //swap with empty
             else
                 board[row][col] = createEmpty(row, col);
@@ -236,21 +236,21 @@ public class Board {
     }
 
 
-    public Castling getCastling(){
+    public com.rat6.chessonline.chessLogic.Castling getCastling(){
         return castling;
     }
 
-    public PawnTransf getPawnTransformation(){
+    public com.rat6.chessonline.chessLogic.PawnTransf getPawnTransformation(){
         return pawnTransf;
     }
 
-    public Check getCheck(PieceEnum team){
-        if(team == PieceEnum.white)
+    public com.rat6.chessonline.chessLogic.Check getCheck(com.rat6.chessonline.chessLogic.PieceEnum team){
+        if(team == com.rat6.chessonline.chessLogic.PieceEnum.white)
             return checkW;
         else return checkB;
     }
 
-    public PawnInterception getPawnInterceptionLogic(){
+    public com.rat6.chessonline.chessLogic.PawnInterception getPawnInterceptionLogic(){
         return pawnInterception;
     }
 

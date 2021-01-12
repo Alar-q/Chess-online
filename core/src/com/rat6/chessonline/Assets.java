@@ -3,8 +3,8 @@ package com.rat6.chessonline;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.rat6.chessonline.ChessLogic.Figure;
-import com.rat6.chessonline.ChessLogic.PieceEnum;
+import com.rat6.chessonline.chessLogic.Figure;
+import com.rat6.chessonline.chessLogic.PieceEnum;
 
 public class Assets {
     public Texture atlas;

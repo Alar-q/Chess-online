@@ -1,13 +1,13 @@
-package com.rat6.chessonline.ChessLogic;
+package com.rat6.chessonline.chessLogic;
 
 import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
 
-public class Queen extends Figure {
+public class Bishop extends Figure {
 
-    public Queen(Board board, PieceEnum team, Vector2 position) {
+    public Bishop(Board board, PieceEnum team, Vector2 position) {
         super(board, team, position);
-        piece = team == PieceEnum.white ? PieceEnum.queenW : PieceEnum.queenB;
+        piece = team == PieceEnum.white ? PieceEnum.bishopW : PieceEnum.bishopB;
     }
 
     @Override
@@ -19,22 +19,16 @@ public class Queen extends Figure {
 
         boolean diagonally = goodDiagonally(to);
 
-        boolean horizontally = goodHorizontally(to);
-
-        boolean vertically = goodVertically(to);
-
-        return !isOwnUnderAttack(to)  && (vertically || horizontally || diagonally);
-
+        return !isOwnUnderAttack(to) && diagonally;
     }
 
     @Override
     public Figure clone() {
-        Queen clone = new Queen(board, team, new Vector2(position));
+        Bishop clone = new Bishop(board, team, new Vector2(position));
         clone.piece = piece;
         clone.visible = visible;
         clone.lastPosition = new Vector2(lastPosition);
         clone.isFirstMove = isFirstMove;
         return clone;
     }
-
 }

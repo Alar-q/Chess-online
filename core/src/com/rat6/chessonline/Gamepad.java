@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.rat6.chessonline.ChessLogic.*;
+import com.rat6.chessonline.chessLogic.PawnInterception;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ public class Gamepad {
     private Main game;
     private Board board;
 
-    private PieceEnum team;
+    private com.rat6.chessonline.chessLogic.PieceEnum team;
 
     private OrthographicCamera camera;
     private Vector3 touchPoint;
@@ -24,16 +24,16 @@ public class Gamepad {
 
     private TextureRegion capturedTextureRegion;
 
-    private Figure figure;
+    private com.rat6.chessonline.chessLogic.Figure figure;
 
     private List<Vector2> available, mbButCheckAfter;
 
-    private Castling castling;
-    private PawnTransf pawnTransf;
+    private com.rat6.chessonline.chessLogic.Castling castling;
+    private com.rat6.chessonline.chessLogic.PawnTransf pawnTransf;
     private PawnInterception pawnInterception;
-    private Check check;
+    private com.rat6.chessonline.chessLogic.Check check;
 
-    public Gamepad(Main game, OrthographicCamera camera, Board board, PieceEnum team) {
+    public Gamepad(Main game, OrthographicCamera camera, Board board, com.rat6.chessonline.chessLogic.PieceEnum team) {
         this.game = game;
         this.camera = camera;
         this.board = board;
@@ -72,10 +72,10 @@ public class Gamepad {
 
     public void onTouch(int row, int col) {
         lastPos.set(col, row);
-        Figure f = board.get(row, col);
-        PieceEnum lastPiece = f.piece;
+        com.rat6.chessonline.chessLogic.Figure f = board.get(row, col);
+        com.rat6.chessonline.chessLogic.PieceEnum lastPiece = f.piece;
         if(f.team!=team) return; //Ходить только за свою команду
-        if (!isCaptured() && lastPiece != PieceEnum.empty && Board.iS_WITHIN_BOARD(row, col))
+        if (!isCaptured() && lastPiece != com.rat6.chessonline.chessLogic.PieceEnum.empty && Board.iS_WITHIN_BOARD(row, col))
             capturePiece(lastPiece, lastPos);
 
     }
@@ -91,7 +91,7 @@ public class Gamepad {
         }
     }
 
-    public void capturePiece(PieceEnum lastPiece, Vector2 lastPos){
+    public void capturePiece(com.rat6.chessonline.chessLogic.PieceEnum lastPiece, Vector2 lastPos){
         //Схватить то что под этими координатами
         capturedPos.set(lastPos);
         capturedTextureRegion = game.assets.getCharactersTextureR(lastPiece);
@@ -118,8 +118,8 @@ public class Gamepad {
             TextureRegion tr = null;
             for (Vector2 vTo : available) {
                 tr = game.assets.green;
-                if(((figure.piece == PieceEnum.kingB || figure.piece == PieceEnum.kingW) && castling.isCastling(figure, capturedPos, vTo))
-                        || (board.get(vTo).piece==PieceEnum.empty && pawnInterception.isPosIsInterception(figure, vTo)))
+                if(((figure.piece == com.rat6.chessonline.chessLogic.PieceEnum.kingB || figure.piece == com.rat6.chessonline.chessLogic.PieceEnum.kingW) && castling.isCastling(figure, capturedPos, vTo))
+                        || (board.get(vTo).piece== com.rat6.chessonline.chessLogic.PieceEnum.empty && pawnInterception.isPosIsInterception(figure, vTo)))
                     tr = game.assets.blue;
                 board.drawCharacter((int) vTo.y, (int) vTo.x, tr);
             }

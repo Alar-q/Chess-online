@@ -1,4 +1,4 @@
-package com.rat6.chessonline.ChessLogic;
+package com.rat6.chessonline.chessLogic;
 
 import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;
@@ -9,15 +9,15 @@ import java.util.List;
 public abstract class Figure {
     protected Board board;
     public boolean visible, isFirstMove;
-    public PieceEnum piece, team;
+    public com.rat6.chessonline.chessLogic.PieceEnum piece, team;
     public Vector2 position, lastPosition;
 
 
-    public Figure(Board board, PieceEnum team, Vector2 position){
+    public Figure(Board board, com.rat6.chessonline.chessLogic.PieceEnum team, Vector2 position){
         this.board = board;
         this.position = position;
         this.team = team;
-        this.piece = PieceEnum.empty;
+        this.piece = com.rat6.chessonline.chessLogic.PieceEnum.empty;
         lastPosition = new Vector2(-1, -1);
         visible = true;
         isFirstMove = true;
@@ -90,8 +90,8 @@ public abstract class Figure {
     }
 
     public boolean isFigureOn(int row, int col){
-        PieceEnum piece = board.getChessPiece(row, col);
-        if(piece==PieceEnum.empty || piece==PieceEnum.can || piece==PieceEnum.cannot)
+        com.rat6.chessonline.chessLogic.PieceEnum piece = board.getChessPiece(row, col);
+        if(piece== com.rat6.chessonline.chessLogic.PieceEnum.empty || piece== com.rat6.chessonline.chessLogic.PieceEnum.can || piece== com.rat6.chessonline.chessLogic.PieceEnum.cannot)
             return false;
         return true;
     }

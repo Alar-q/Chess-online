@@ -1,4 +1,4 @@
-package com.rat6.chessonline.ChessLogic;
+package com.rat6.chessonline.chessLogic;
 
 import com.badlogic.gdx.math.Vector2;
 import com.rat6.chessonline.Board;

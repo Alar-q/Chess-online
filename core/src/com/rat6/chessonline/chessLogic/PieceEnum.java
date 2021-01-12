@@ -1,4 +1,4 @@
-package com.rat6.chessonline.ChessLogic;
+package com.rat6.chessonline.chessLogic;
 
 public enum PieceEnum {
     can, cannot, castling, //Выделение клеток
