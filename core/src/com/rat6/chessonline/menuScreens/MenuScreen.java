@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 import com.rat6.chessonline.Main;
 import com.rat6.chessonline.chessLogic.PieceEnum;
 
@@ -17,6 +18,7 @@ public class MenuScreen extends ScreenAdapter {
 
     private Main game;
     private OrthographicCamera camera;
+    private Vector3 touchPoint;
 
     public MenuScreen(Main game){
         this.game = game;
@@ -24,7 +26,7 @@ public class MenuScreen extends ScreenAdapter {
         camera = new OrthographicCamera(WIDTH, HEIGHT);
         camera.position.set(WIDTH/2, HEIGHT/2, 0);
 
-
+        touchPoint = new Vector3();
     }
 
     @Override
@@ -35,8 +37,10 @@ public class MenuScreen extends ScreenAdapter {
 
     private void update(){
         Input in = Gdx.input;
-
-
+        if(in.isTouched()) {
+            camera.unproject(touchPoint.set(in.getX(), in.getY(), 0));
+            //if () {}
+        }
 
     }
 
@@ -60,8 +64,9 @@ public class MenuScreen extends ScreenAdapter {
         game.batcher.begin();
 
         for(int i=0; i<5; i++) {
-            game.batcher.draw(game.assets.blue, WIDTH - width*2, startHeight + (height * i) + (distance * i), width, height);
+            game.batcher.draw(game.assets.blue, (WIDTH - width) / 2, startHeight + (height * i) + (distance * i), width, height);
         }
+        //game.batcher.draw(game.assets.blue, 1, startHeight, width, height);
         game.batcher.end();
     }
 

@@ -9,22 +9,11 @@ import com.rat6.chessonline.chessLogic.PieceEnum;
 public class Assets {
     public Texture atlas;
     public TextureRegion board;
-    public TextureRegion kingB;
-    public TextureRegion kingW;
-    public TextureRegion queenB;
-    public TextureRegion queenW;
-    public TextureRegion rookB;
-    public TextureRegion rookW;
-    public TextureRegion bishopB;
-    public TextureRegion bishopW;
-    public TextureRegion knightB;
-    public TextureRegion knightW;
-    public TextureRegion pawnB;
-    public TextureRegion pawnW;
-    public TextureRegion green;
-    public TextureRegion blue;
-    public TextureRegion red;
-
+    public TextureRegion pawnW, knightW, bishopW, rookW, queenW, kingW;
+    public TextureRegion pawnB, knightB, bishopB, rookB, queenB, kingB;
+    public TextureRegion blue, red, green;
+    public TextureRegion buttonUnTouch, buttonTouch;
+    public TextureRegion font;
 
     public Texture loadTexture(String fileName) {
         return new Texture(Gdx.files.internal(fileName));
@@ -55,6 +44,11 @@ public class Assets {
 
         pawnB = new TextureRegion(atlas, 768, 128, 64, 64);
         pawnW = new TextureRegion(atlas, 832, 128, 64, 64);
+
+        buttonUnTouch = new TextureRegion(atlas, 512, 256, 32, 32);
+        buttonTouch = new TextureRegion(atlas, 576, 256, 32, 32);
+
+        font = new TextureRegion(atlas, 640, 192, 256, 128);
     }
 
     public TextureRegion getCharactersTextureR(PieceEnum pieceEnum){
@@ -78,8 +72,7 @@ public class Assets {
             case queenW:
                 tr = queenW;
                 break;
-            case rookB:
-                tr = rookB;
+            case rookB: tr = rookB;
                 break;
             case rookW:
                 tr = rookW;
@@ -108,15 +101,15 @@ public class Assets {
     }
 
     public void printBoard(Board board){
-        System.out.print("****************************");
+        System.out.println("****************************");
         for(int y=7; y>-1; y--){
-            System.out.println();
             for(int x=0; x<8; x++){
                 Figure f = board.get(y, x);
                 System.out.print(f.piece + " ");
             }
+            System.out.println();
         }
-        System.out.println("\n****************************");
+        System.out.println("****************************");
     }
 
     public void dispose(){

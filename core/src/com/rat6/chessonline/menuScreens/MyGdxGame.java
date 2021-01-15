@@ -17,6 +17,7 @@ public class MyGdxGame implements ApplicationListener {
     private BitmapFont FontBlue2;
     private BitmapFont FontMaroon3;
     private BitmapFont FontMaroonMulti;
+    private BitmapFont fontFromBitmap;
 
     @Override
     public void create() {
@@ -37,6 +38,7 @@ public class MyGdxGame implements ApplicationListener {
         FontMaroonMulti = new BitmapFont();
         FontMaroonMulti.setColor(Color.MAROON); // Коричневый
        // FontMaroonMulti.setScale(7,5);
+
     }
 
     @Override
