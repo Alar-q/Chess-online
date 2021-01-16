@@ -11,10 +11,10 @@ public class Check {
 
     private Board board;
     private boolean wasCheckBefore;
-    private com.rat6.chessonline.chessLogic.Figure king;
+    private Figure king;
     private TextureRegion tr;
 
-    public Check(Board board, com.rat6.chessonline.chessLogic.Figure king, TextureRegion tr){
+    public Check(Board board, Figure king, TextureRegion tr){
         this.board = board;
         wasCheckBefore = false;
         this.king = king;
@@ -35,10 +35,10 @@ public class Check {
 
 
     public boolean isAfterMoveCheck(int row, int col, int rowTo, int colTo){
-        com.rat6.chessonline.chessLogic.Figure f = board.get(row, col);
-        com.rat6.chessonline.chessLogic.Figure f_clone = f.clone();
-        com.rat6.chessonline.chessLogic.Figure f2 = board.get(rowTo, colTo);
-        com.rat6.chessonline.chessLogic.Figure empty = board.createEmpty(row, col);
+        Figure f = board.get(row, col);
+        Figure f_clone = f.clone();
+        Figure f2 = board.get(rowTo, colTo);
+        Figure empty = board.createEmpty(row, col);
 
         board.set_unchanged(row, col, empty); //удаляем фигуру, которая стояла на старой позиции
         board.set_unchanged(rowTo, colTo, f_clone); //Поставили взятую рукой фигуру

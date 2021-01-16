@@ -12,7 +12,7 @@ public class PawnTransf {
 
     public boolean isTransNow;
     public Vector2 transPos;
-    public com.rat6.chessonline.chessLogic.PieceEnum team;
+    public PieceEnum team;
 
     public PawnTransf(Main game, Board board){
         this.game = game;
@@ -21,10 +21,10 @@ public class PawnTransf {
         transPos = new Vector2();
     }
 
-    public boolean fixPawn_Reached_The_End(int row, int col, com.rat6.chessonline.chessLogic.Figure f) {
-        com.rat6.chessonline.chessLogic.PieceEnum p = f.piece;
+    public boolean fixPawn_Reached_The_End(int row, int col, Figure f) {
+        PieceEnum p = f.piece;
 
-        if ((p == com.rat6.chessonline.chessLogic.PieceEnum.pawnB && row == 0) || (p == com.rat6.chessonline.chessLogic.PieceEnum.pawnW && row == 7)) {
+        if ((p == PieceEnum.pawnB && row == 0) || (p == PieceEnum.pawnW && row == 7)) {
             transPos.set(col, row);
             team = f.team;
             isTransNow = true;

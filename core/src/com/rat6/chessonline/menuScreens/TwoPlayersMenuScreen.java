@@ -1,20 +1,22 @@
 package com.rat6.chessonline.menuScreens;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2D;
 import com.rat6.chessonline.Main;
 import com.rat6.chessonline.MainGameScreen;
-import com.rat6.chessonline.chessLogic.PieceEnum;
 import com.rat6.chessonline.framework.Font;
 import com.rat6.chessonline.framework.OverlapTester;
 
-import java.awt.event.InputEvent;
-
-public class MenuScreen extends ScreenAdapter {
+/*
+Можно играть вдвоем на одном устройстве и на двух разных
+ */
+public class TwoPlayersMenuScreen extends ScreenAdapter {
 
     private final static int WIDTH = 10, HEIGHT = 15;
 
@@ -31,7 +33,7 @@ public class MenuScreen extends ScreenAdapter {
 
     private Font font;
 
-    public MenuScreen(Main game){
+    public TwoPlayersMenuScreen(Main game){
         this.game = game;
 
         camera = new OrthographicCamera(WIDTH, HEIGHT);
@@ -39,8 +41,8 @@ public class MenuScreen extends ScreenAdapter {
 
         touchPoint = new Vector3();
 
-        buttons = new Rectangle[5];
-        for(int i=0; i<5; i++) {
+        buttons = new Rectangle[2];
+        for(int i=0; i<buttons.length; i++) {
             buttons[i] = new Rectangle((WIDTH - width) / 2, startHeight + (height * i) + (distance * i), width, height);
         }
 
@@ -105,5 +107,4 @@ public class MenuScreen extends ScreenAdapter {
 
         game.batcher.end();
     }
-
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.rat6.chessonline.chessLogic.Figure;
 import com.rat6.chessonline.chessLogic.PieceEnum;
+import com.rat6.chessonline.framework.Font;
 
 public class Assets {
     public Texture atlas;
@@ -13,7 +14,9 @@ public class Assets {
     public TextureRegion pawnB, knightB, bishopB, rookB, queenB, kingB;
     public TextureRegion blue, red, green;
     public TextureRegion buttonUnTouch, buttonTouch;
-    public TextureRegion font;
+    public TextureRegion soundOff_icon, soundOn_icon, next_icon, pause_icon;
+
+    public Font font;
 
     public Texture loadTexture(String fileName) {
         return new Texture(Gdx.files.internal(fileName));
@@ -45,10 +48,15 @@ public class Assets {
         pawnB = new TextureRegion(atlas, 768, 128, 64, 64);
         pawnW = new TextureRegion(atlas, 832, 128, 64, 64);
 
-        buttonUnTouch = new TextureRegion(atlas, 512, 256, 32, 32);
-        buttonTouch = new TextureRegion(atlas, 576, 256, 32, 32);
+        soundOff_icon = new TextureRegion(atlas, 512, 192, 64, 64);
+        soundOn_icon = new TextureRegion(atlas, 576, 192, 64, 64);
+        next_icon = new TextureRegion(atlas, 512, 256, 64, 64);
+        pause_icon = new TextureRegion(atlas, 576, 256, 64, 64);
 
-        font = new TextureRegion(atlas, 640, 192, 256, 128);
+        buttonUnTouch = new TextureRegion(atlas, 512, 320, 64, 64);
+        buttonTouch = new TextureRegion(atlas, 576, 320, 64, 64);
+
+        font = new Font(atlas, 640, 192, 16, 16, 20);
     }
 
     public TextureRegion getCharactersTextureR(PieceEnum pieceEnum){
