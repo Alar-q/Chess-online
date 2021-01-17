@@ -6,15 +6,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Font {
-    public final Texture texture;
-    public final int glyphWidth;
-    public final int glyphHeight;
-    public final TextureRegion[] glyphs = new TextureRegion[96];
+    private SpriteBatch batch;
+    private final TextureRegion[] glyphs = new TextureRegion[96];
 
-    public Font(Texture texture, int offsetX, int offsetY, int glyphsPerRow, int glyphWidth, int glyphHeight) {
-        this.texture = texture;
-        this.glyphWidth = glyphWidth;
-        this.glyphHeight = glyphHeight;
+    public Font(SpriteBatch batch, Texture texture, int offsetX, int offsetY, int glyphsPerRow, int glyphWidth, int glyphHeight) {
+        this.batch = batch;
         int x = offsetX;
         int y = offsetY;
         for(int i = 0; i < 96; i++) {
@@ -27,7 +23,7 @@ public class Font {
         }
     }
 
-    public void drawText(SpriteBatch batch, String text, float x, float y, float letterWidth, float letterHeight) {
+    public void drawText(String text, float x, float y, float letterWidth, float letterHeight) {
         int len = text.length();
         for(int i = 0; i < len; i++) {
             int c = text.charAt(i) - ' ';
@@ -39,7 +35,7 @@ public class Font {
         }
     }
 
-    public void drawText(SpriteBatch batch, String text, Rectangle r, float letterWidth, float letterHeight){
-        drawText(batch, text, r.x+(r.width/2)-((text.length()*letterWidth)/2), r.y+r.height/2-letterHeight/2, letterWidth, letterHeight);
+    public void drawText(String text, Rectangle r, float letterWidth, float letterHeight){
+        drawText(text, r.x+(r.width/2)-((text.length()*letterWidth)/2), r.y+r.height/2-letterHeight/2, letterWidth, letterHeight);
     }
 }

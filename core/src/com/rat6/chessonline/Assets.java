@@ -16,7 +16,6 @@ public class Assets {
     public TextureRegion buttonUnTouch, buttonTouch;
     public TextureRegion soundOff_icon, soundOn_icon, next_icon, pause_icon;
 
-    public Font font;
 
     public Texture loadTexture(String fileName) {
         return new Texture(Gdx.files.internal(fileName));
@@ -56,7 +55,6 @@ public class Assets {
         buttonUnTouch = new TextureRegion(atlas, 512, 320, 64, 64);
         buttonTouch = new TextureRegion(atlas, 576, 320, 64, 64);
 
-        font = new Font(atlas, 640, 192, 16, 16, 20);
     }
 
     public TextureRegion getCharactersTextureR(PieceEnum pieceEnum){

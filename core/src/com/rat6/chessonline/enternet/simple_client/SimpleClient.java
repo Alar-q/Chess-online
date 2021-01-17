@@ -1,61 +1,76 @@
 package com.rat6.chessonline.enternet.simple_client;
 
+import com.rat6.chessonline.enternet.simple_server.SimpleServer;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import static com.rat6.chessonline.enternet.simple_server.SimpleServer.safe_word;
+
 public class SimpleClient {
-    public static void main(String[] args){
-        SimpleClient sc = new SimpleClient("192.168.100.6", 15432);
+
+
+    private boolean isConnected;
+
+    private Socket socket;
+    private PrintWriter output;
+    private BufferedReader input;
+
+    public SimpleClient(String ip){
+        isConnected = connect(ip);
     }
 
-    public SimpleClient(String id, int port){
+    public boolean connect(String ip){
         try{
-            BufferedReader sysIn = new BufferedReader(new InputStreamReader(System.in));
             System.out.println("Connecting. ");
 
-            InetAddress address = InetAddress.getByName(id);
-            Socket socket = new Socket(address, port);
+            InetAddress address = InetAddress.getByName(ip);
+            socket = new Socket(address, SimpleServer.port);
             System.out.print("Connection. ");
 
-            //opens a PrintWriter on the socket input autoflush mode
-            PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+            output = new PrintWriter(socket.getOutputStream(), true);
 
-            //opens a BufferedReader on the socket
-            BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             System.out.println("Requesting output to: " + address.getHostAddress());
-            output.println("Thanks. ");
+            output.println("Hello");
 
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-            while (true) {
-
-                if(sysIn.ready()){
-                    String sCmnd = sysIn.readLine();
-
-                    output.println(sCmnd);
-                    System.out.println("Client: " + sCmnd);
-
-                    if(sCmnd.equals("stop")) break;
-
-                }
-
-                if(input.ready()){
-                    String serverStr = input.readLine();
-                    System.out.println("Server: " + serverStr);
-                    if(serverStr.equals("stop")) break;
-                }
-
+    public void update(){
+        if(!isConnected){return;}
+        try {
+            if (input.ready()) {
+                String serverStr = input.readLine();
+                System.out.println("Server: " + serverStr);
+                if (serverStr.equals(safe_word)) release();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void release(){
+        try{
+            output.println(safe_word);
+            isConnected = false;
             input.close();
             output.close();
             socket.close();
-            sysIn.close();
-
-        } catch (Exception e) {
+        }catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    public boolean isConnected(){
+        return isConnected;
     }
 }

@@ -23,8 +23,6 @@ public class MenuScreen extends ScreenAdapter {
     protected float width = 8, height = 1.5f, distance = 0.25f, startHeight;
     protected float glyphWidth = 0.6f, glyphHeight = 0.6f;
 
-    protected Font font;
-
     private final int one_player=4, two_player=3, settings=2, help=1, exit=0;
 
 
@@ -42,8 +40,6 @@ public class MenuScreen extends ScreenAdapter {
             buttons[i] = new Rectangle((MENU_WIDTH - width) / 2, startHeight + (height * i) + (distance * i), width, height);
         }
         initBNames();
-
-        font = game.assets.font;
     }
 
 
@@ -109,7 +105,7 @@ public class MenuScreen extends ScreenAdapter {
         for(int i=0; i<buttons.length; i++){
             Rectangle r = buttons[i];
             game.batcher.draw(game.assets.buttonUnTouch, r.x, r.y, r.width, r.height);
-            font.drawText(game.batcher, bNames[i], r, glyphWidth, glyphHeight);
+            game.font.drawText(bNames[i], r, glyphWidth, glyphHeight);
         }
 
         game.batcher.end();

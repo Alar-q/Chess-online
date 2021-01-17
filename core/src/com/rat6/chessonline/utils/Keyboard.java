@@ -122,10 +122,10 @@ public class Keyboard {
         for(int i=0; i<keys.length; i++){
             Rectangle r = keys[i];
             game.batcher.draw(game.assets.buttonUnTouch, r.x, r.y, r.width, r.height);
-            game.assets.font.drawText(game.batcher, kNames[i], r, glyphWidth, glyphHeight);
+            game.font.drawText(kNames[i], r, glyphWidth, glyphHeight);
         }
         //Рисуем ipv4
-        game.assets.font.drawText(game.batcher, entered_text, indents, keysTop, glyphWidth, glyphHeight);
+        game.font.drawText(entered_text, indents, keysTop, glyphWidth, glyphHeight);
     }
 
 

@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
 import com.rat6.chessonline.Main;
+import com.rat6.chessonline.enternet.simple_client.ClientGameScreen;
 import com.rat6.chessonline.enternet.simple_client.SimpleClient;
 import com.rat6.chessonline.utils.Keyboard;
 
@@ -40,24 +40,31 @@ public class ClientConnectScreen extends ScreenAdapter {
     }
 
 
-    private boolean connecting = false;
+    private boolean connected = false;
 
     private void update(){
-        if(!connecting && keyboard.update()){
+        if(!connected && keyboard.update()){
             System.out.println(keyboard.getEnteredText());
             if(keyboard.lastPressedKey == keyboard.connect){
-                connecting = true;
+                connected = true;
                 connect();
             }
+        }
+        if(client.isConnected()){
+            game.setScreen(new ClientGameScreen(game, client));
+        }else{
+            connected = false;
         }
     }
 
     private void connect(){
-        if(isIPV4(keyboard.getEnteredText())) { // Нужно проверить является ли введенный текст IP адрессом
+        String ip = keyboard.getEnteredText();
+        if(isIPV4(ip)) { // Нужно проверить является ли введенный текст IP адрессом
             //client = new SimpleClient(keyboard.getEnteredText(), 1);
             System.out.println("client trying to connect");
+            client = new SimpleClient(ip);
         }else{
-            connecting = false;
+            connected = false;
         }
     }
 
@@ -81,11 +88,19 @@ public class ClientConnectScreen extends ScreenAdapter {
 
         keyboard.present();
 
+        //game.font.drawText();
+
         game.batcher.end();
 
         keyboard.drawLine(); //Нужно заменить на просто растягивание черного пикселя
     }
 
-
-
+    @Override
+    public void pause(){
+        client.release();
+    }
+    @Override
+    public void dispose(){
+        client.release();
+    }
 }
