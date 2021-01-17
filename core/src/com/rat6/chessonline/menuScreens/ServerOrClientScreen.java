@@ -1,6 +1,5 @@
 package com.rat6.chessonline.menuScreens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -13,14 +12,12 @@ import com.rat6.chessonline.MainGameScreen;
 import com.rat6.chessonline.framework.Font;
 import com.rat6.chessonline.framework.OverlapTester;
 
-/*
-Можно играть вдвоем на одном устройстве и на двух разных
- */
-public class TwoPlayersMenuScreen extends MenuScreen {
 
-    private final int one_device = 0, online = 1;
+public class ServerOrClientScreen extends MenuScreen {
 
-    public TwoPlayersMenuScreen(Main game) {
+    private final int client = 0, server = 1;
+
+    public ServerOrClientScreen(Main game) {
         super(game);
     }
 
@@ -31,7 +28,7 @@ public class TwoPlayersMenuScreen extends MenuScreen {
 
     @Override
     protected void initBNames(){
-        bNames = new String[]{"one device", "online"};
+        bNames = new String[]{"client", "server"};
     }
 
     @Override
@@ -39,16 +36,16 @@ public class TwoPlayersMenuScreen extends MenuScreen {
         Input in = Gdx.input;
         if(in.justTouched()) {
             camera.unproject(touchPoint.set(in.getX(), in.getY(), 0));
-            for(int i=0; i<buttons.length; i++) {
+            for (int i = 0; i < buttons.length; i++) {
                 Rectangle r = buttons[i];
                 if (OverlapTester.pointInRectangle(r, touchPoint)) {
-                    switch (i){
-                        case online:
-                            System.out.println("online");
-                            game.setScreen(new ServerOrClientScreen(game));
+                    switch (i) {
+                        case server:
+                            System.out.println("Server");
+                            game.setScreen(new ServerStartScreen(game));
                             break;
-                        case one_device:
-                            game.setScreen(new MainGameScreen(game));
+                        case client:
+                            game.setScreen(new ClientConnectScreen(game));
                             break;
 
                     }
@@ -57,15 +54,13 @@ public class TwoPlayersMenuScreen extends MenuScreen {
         }
     }
 }
-
 /*
-*  private final static int WIDTH = 10, HEIGHT = 15;
-
+*
     private Main game;
     private OrthographicCamera camera;
     private Vector3 touchPoint;
 
-    private final int one_device = 0, online = 1;
+    private final int client = 0, server = 1;
     private Rectangle[] buttons;
     private String[] bNames;
     private final float width = 8, height = 1.5f, distance = 0.25f, startHeight = 5.25f;
@@ -74,20 +69,20 @@ public class TwoPlayersMenuScreen extends MenuScreen {
 
     private Font font;
 
-    public TwoPlayersMenuScreen(Main game){
+    public ServerOrClientScreen(Main game){
         this.game = game;
 
-        camera = new OrthographicCamera(WIDTH, HEIGHT);
-        camera.position.set(WIDTH/2, HEIGHT/2, 0);
+        camera = new OrthographicCamera(MENU_WIDTH, MENU_HEIGHT);
+        camera.position.set(MENU_WIDTH/2, MENU_HEIGHT/2, 0);
 
         touchPoint = new Vector3();
 
         buttons = new Rectangle[2];
         for(int i=0; i<buttons.length; i++) {
-            buttons[i] = new Rectangle((WIDTH - width) / 2, startHeight + (height * i) + (distance * i), width, height);
+            buttons[i] = new Rectangle((MENU_WIDTH - width) / 2, startHeight + (height * i) + (distance * i), width, height);
         }
 
-        bNames = new String[]{"one device", "online"};
+        bNames = new String[]{"client", "server"};
 
         font = game.assets.font;
     }
@@ -106,12 +101,12 @@ public class TwoPlayersMenuScreen extends MenuScreen {
                 Rectangle r = buttons[i];
                 if (OverlapTester.pointInRectangle(r, touchPoint)) {
                     switch (i){
-                        case online:
-                            System.out.println("online");
-                            game.setScreen(new ServerOrClientScreen(game));
+                        case server:
+                            System.out.println("Server");
+                            game.setScreen(new ServerStartScreen(game));
                             break;
-                        case one_device:
-                            game.setScreen(new MainGameScreen(game));
+                        case client:
+                            game.setScreen(new ClientConnectScreen(game));
                             break;
 
                     }
@@ -140,5 +135,4 @@ public class TwoPlayersMenuScreen extends MenuScreen {
         }
 
         game.batcher.end();
-    }
-    */
+    }*/
