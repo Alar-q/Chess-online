@@ -17,14 +17,14 @@ import com.rat6.chessonline.utils.Keyboard;
 public class ClientConnectScreen extends ScreenAdapter {
 
     private Main game;
-    private final int MENU_WIDTH = 10, MENU_HEIGHT = 15;
+    private final float MENU_WIDTH = 10, MENU_HEIGHT = 15;
     private OrthographicCamera camera;
     private Keyboard keyboard;
 
     public ClientConnectScreen(Main game){
         this.game = game;
         camera = new OrthographicCamera(MENU_WIDTH, MENU_HEIGHT);
-        camera.position.set(MENU_WIDTH /2, MENU_HEIGHT /2, 0);
+        camera.position.set(MENU_WIDTH / 2f, MENU_HEIGHT / 2f, 0);
         keyboard = new Keyboard(game, MENU_WIDTH, MENU_HEIGHT);
     }
 

@@ -19,7 +19,7 @@ public class MainGameScreen extends ScreenAdapter {
         this.game = game;
 
         camera = new OrthographicCamera(game.WORLD_WIDTH, game.WORLD_HEIGHT);
-        camera.position.set(game.WORLD_WIDTH/2, game.WORLD_HEIGHT/2, 0);
+        camera.position.set(game.WORLD_WIDTH/2f, game.WORLD_HEIGHT/2f, 0);
 
         board = new Board(game);
         gamepadW = new Gamepad(game, camera, board, PieceEnum.white);

@@ -12,7 +12,7 @@ import com.rat6.chessonline.framework.OverlapTester;
 
 public class MenuScreen extends ScreenAdapter {
 
-    protected final int MENU_WIDTH = 10, MENU_HEIGHT = 15;
+    protected final float MENU_WIDTH = 10, MENU_HEIGHT = 15;
 
     protected Main game;
     protected OrthographicCamera camera;
@@ -32,7 +32,7 @@ public class MenuScreen extends ScreenAdapter {
         this.game = game;
 
         camera = new OrthographicCamera(MENU_WIDTH, MENU_HEIGHT);
-        camera.position.set(MENU_WIDTH /2, MENU_HEIGHT /2, 0);
+        camera.position.set(MENU_WIDTH / 2f, MENU_HEIGHT / 2f, 0);
 
         touchPoint = new Vector3();
 
