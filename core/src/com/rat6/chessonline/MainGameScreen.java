@@ -69,7 +69,7 @@ public class MainGameScreen extends ScreenAdapter {
         game.batcher.end();
     }
 
-    //То есть по умолчанию играют 2 игрока
+    //То есть по умолчанию играют 2 игрока на одном устройстве
     //Для того чтобы сделать онлайн надо будет за extend-иться от этого класса и просто перезаписать эти методы
     public void drawGamepad(){
         gamepadW.present(); //one captured figure under finger

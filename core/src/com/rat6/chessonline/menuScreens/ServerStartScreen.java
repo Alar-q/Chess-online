@@ -8,7 +8,8 @@ import com.rat6.chessonline.Main;
  */
 
 public class ServerStartScreen extends ScreenAdapter {
-    Main game;
+    private Main game;
+
     public ServerStartScreen(Main game){
         this.game = game;
 
