@@ -85,10 +85,7 @@ public class Keyboard {
         }
     }
 
-    int lastPressedKey;
-    public int getLastPressedKey(){
-        return lastPressedKey;
-    }
+    public int lastPressedKey;
 
     public boolean update(){
         Input in = Gdx.input;

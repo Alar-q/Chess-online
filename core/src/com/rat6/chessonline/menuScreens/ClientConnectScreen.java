@@ -45,7 +45,7 @@ public class ClientConnectScreen extends ScreenAdapter {
     private void update(){
         if(!connecting && keyboard.update()){
             System.out.println(keyboard.getEnteredText());
-            if(keyboard.getLastPressedKey() == keyboard.connect){
+            if(keyboard.lastPressedKey == keyboard.connect){
                 connecting = true;
                 connect();
             }
