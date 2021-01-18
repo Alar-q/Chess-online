@@ -16,10 +16,27 @@ public class SimpleServer {
     private ServerSocket serverSocket;
     private Socket client;
 
+    public boolean connected = false, available = false;
+
     private BufferedReader input;
     private PrintWriter output;
 
     private String ip;
+
+    public class TT extends Thread{
+        @Override
+        public void run(){
+            try {
+                client = serverSocket.accept();
+                connected = true;
+            } catch (IOException e) {
+                System.out.println("LOL ty daun");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private TT tt;
 
     public static void main(String[] args) {
         SimpleServer server = new SimpleServer();
@@ -35,7 +52,19 @@ public class SimpleServer {
             ip = getHostAddresses()[0];
             System.out.println("Server listening on port: "+port+". IP: "+ ip);
 
-            client = serverSocket.accept();
+            tt = new TT();
+            tt.start();
+
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void connect() {
+        try {
+
             System.out.println("client connected.");
 
             output = new PrintWriter(client.getOutputStream(), true);
@@ -44,10 +73,9 @@ public class SimpleServer {
 
             send2client("Hello");
 
-            return true;
-        } catch (Exception e){
+            available = true;
+        }catch (IOException e){
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -78,6 +106,7 @@ public class SimpleServer {
             output.close();
             client.close();
             serverSocket.close();
+            tt.stop();
         }catch(IOException e){e.printStackTrace();}
     }
 

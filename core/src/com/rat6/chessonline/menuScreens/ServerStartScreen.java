@@ -47,7 +47,15 @@ public class ServerStartScreen extends ScreenAdapter {
     private boolean connected = false;
 
     private void update() {
+        if(server.available){
+            server.update();
+        }
+        else if (server.connected) {
+            System.out.println("QQ");
+            server.connect();
+        }
     }
+
 
     private void present(){
         GL20 gl = Gdx.gl;
