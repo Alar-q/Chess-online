@@ -1,4 +1,4 @@
-package com.rat6.chessonline.enternet;
+package com.rat6.chessonline;
 
 import com.rat6.chessonline.Main;
 import com.rat6.chessonline.MainGameScreen;
@@ -9,5 +9,10 @@ public class OnlineGameScreen extends MainGameScreen {
     public OnlineGameScreen(Main game, ConnectIO connectIO) {
         super(game);
         this.connectIO = connectIO;
+    }
+
+    @Override
+    public void dispose(){
+        connectIO.release();
     }
 }

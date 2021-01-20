@@ -1,11 +1,9 @@
-package com.rat6.chessonline.menuScreens;
+package com.rat6.chessonline.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Rectangle;
 import com.rat6.chessonline.Main;
-import com.rat6.chessonline.enternet.simple_client.ClientConnectScreen;
-import com.rat6.chessonline.enternet.simple_server.ServerStartScreen;
 import com.rat6.chessonline.framework.OverlapTester;
 
 

@@ -1,4 +1,4 @@
-package com.rat6.chessonline.menuScreens;
+package com.rat6.chessonline.Screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.rat6.chessonline.Main;
 import com.rat6.chessonline.MainGameScreen;
-import com.rat6.chessonline.framework.Font;
 import com.rat6.chessonline.framework.OverlapTester;
 
 public class MenuScreen extends ScreenAdapter {

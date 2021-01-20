@@ -1,4 +1,4 @@
-package com.rat6.chessonline.menuScreens;
+package com.rat6.chessonline.Screens;
 
 import com.rat6.chessonline.Main;
 import com.rat6.chessonline.MainGameScreen;

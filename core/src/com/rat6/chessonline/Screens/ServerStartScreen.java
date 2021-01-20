@@ -1,4 +1,4 @@
-package com.rat6.chessonline.enternet.simple_server;
+package com.rat6.chessonline.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,11 +8,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.rat6.chessonline.Main;
-import com.rat6.chessonline.enternet.OnlineGameScreen;
+import com.rat6.chessonline.OnlineGameScreen;
 import com.rat6.chessonline.enternet.simple_server.SimpleServer;
-import com.rat6.chessonline.framework.OverlapTester;
-import com.rat6.chessonline.menuScreens.ServerOrClientScreen;
-import com.rat6.chessonline.utils.StandardBackButton;
+import com.rat6.chessonline.utils.StandardButton;
 
 /**
  * Нужно запустить сервер и вывести на экран IP
@@ -30,7 +28,7 @@ public class ServerStartScreen extends ScreenAdapter {
     private SimpleServer server;
 
     private Rectangle windowRec = new Rectangle(0, 0, MENU_WIDTH, MENU_HEIGHT);
-    private StandardBackButton backButton;
+    private StandardButton backButton;
 
 
     public ServerStartScreen(Main game){
@@ -41,7 +39,7 @@ public class ServerStartScreen extends ScreenAdapter {
 
         server = new SimpleServer();
 
-        backButton = new StandardBackButton(game, MENU_WIDTH, MENU_HEIGHT);
+        backButton = new StandardButton(game, camera, game.assets.buttonUnTouch);
     }
 
     @Override
@@ -54,7 +52,7 @@ public class ServerStartScreen extends ScreenAdapter {
         Input in = Gdx.input;
         if(in.justTouched()){
             camera.unproject(touchPoint.set(in.getX(), in.getY(), 0));
-            if(OverlapTester.pointInRectangle(backButton.bounds(), touchPoint)){
+            if(backButton.touched(touchPoint)){
                 server.release();
                 game.setScreen(new ServerOrClientScreen(game));
             }
@@ -75,7 +73,7 @@ public class ServerStartScreen extends ScreenAdapter {
         game.batcher.enableBlending();
         game.batcher.begin();
 
-        backButton.draw();
+        backButton.draw(game.assets.next_icon);
 
         game.font.drawText(server.getIp(), windowRec, glyphWidth, glyphHeight);
         game.font.drawText("Waiting for the client...", windowRec, 0, -glyphHeight-0.2f, glyphWidth-0.2f, glyphHeight-0.2f);

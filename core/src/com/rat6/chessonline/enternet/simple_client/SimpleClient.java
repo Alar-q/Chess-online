@@ -8,11 +8,6 @@ import java.net.Socket;
 
 
 public class SimpleClient extends ConnectIO{
-
-    public SimpleClient(String ip){
-        isConnected = connect(ip);
-    }
-
     public boolean connect(String ip){
         try{
             System.out.println("Connecting. ");
