@@ -30,6 +30,9 @@ public class ServerOrClientScreen extends MenuScreen {
         Input in = Gdx.input;
         if(in.justTouched()) {
             camera.unproject(touchPoint.set(in.getX(), in.getY(), 0));
+            if(backButton.touched(touchPoint)){
+                game.setScreen(new TwoPlayersMenuScreen(game));
+            }
             for (int i = 0; i < buttons.length; i++) {
                 Rectangle r = buttons[i];
                 if (OverlapTester.pointInRectangle(r, touchPoint)) {
@@ -47,4 +50,5 @@ public class ServerOrClientScreen extends MenuScreen {
             }
         }
     }
+
 }

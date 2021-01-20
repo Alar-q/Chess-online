@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.rat6.chessonline.Main;
 import com.rat6.chessonline.MainGameScreen;
 import com.rat6.chessonline.framework.OverlapTester;
+import com.rat6.chessonline.utils.StandardButton;
 
 public class MenuScreen extends ScreenAdapter {
 
@@ -24,6 +25,9 @@ public class MenuScreen extends ScreenAdapter {
 
     private final int one_player=4, two_player=3, settings=2, help=1, exit=0;
 
+    protected StandardButton backButton;
+
+    private boolean isHeir = true;
 
     public MenuScreen(Main game){
         this.game = game;
@@ -32,6 +36,8 @@ public class MenuScreen extends ScreenAdapter {
         camera.position.set(MENU_WIDTH / 2f, MENU_HEIGHT / 2f, 0);
 
         touchPoint = new Vector3();
+
+        backButton = new StandardButton(game, camera, game.assets.buttonUnTouch);
 
         initButtons();
         startHeight = MENU_HEIGHT/2 - (((height+distance)*buttons.length) / 2);
@@ -61,6 +67,7 @@ public class MenuScreen extends ScreenAdapter {
 
 
     protected void update(){
+        isHeir = false;
         Input in = Gdx.input;
         if(in.justTouched()) {
             camera.unproject(touchPoint.set(in.getX(), in.getY(), 0));
@@ -100,6 +107,9 @@ public class MenuScreen extends ScreenAdapter {
 
         game.batcher.enableBlending();
         game.batcher.begin();
+
+        if(isHeir)
+            backButton.draw(game.assets.next_icon);
 
         for(int i=0; i<buttons.length; i++){
             Rectangle r = buttons[i];
