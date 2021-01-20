@@ -2,14 +2,10 @@ package com.rat6.chessonline.menuScreens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 import com.rat6.chessonline.Main;
-import com.rat6.chessonline.MainGameScreen;
-import com.rat6.chessonline.framework.Font;
+import com.rat6.chessonline.enternet.simple_client.ClientConnectScreen;
+import com.rat6.chessonline.enternet.simple_server.ServerStartScreen;
 import com.rat6.chessonline.framework.OverlapTester;
 
 

@@ -38,4 +38,7 @@ public class Font {
     public void drawText(String text, Rectangle r, float letterWidth, float letterHeight){
         drawText(text, r.x+(r.width/2)-((text.length()*letterWidth)/2), r.y+r.height/2-letterHeight/2, letterWidth, letterHeight);
     }
+    public void drawText(String text, Rectangle r, float biosX, float biosY, float letterWidth, float letterHeight){
+        drawText(text, r.x+(r.width/2)-((text.length()*letterWidth)/2)+biosX, r.y+r.height/2-letterHeight/2+biosY, letterWidth, letterHeight);
+    }
 }

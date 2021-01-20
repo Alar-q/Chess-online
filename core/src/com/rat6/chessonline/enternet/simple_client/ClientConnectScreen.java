@@ -1,11 +1,11 @@
-package com.rat6.chessonline.menuScreens;
+package com.rat6.chessonline.enternet.simple_client;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.rat6.chessonline.Main;
-import com.rat6.chessonline.enternet.simple_client.ClientGameScreen;
+import com.rat6.chessonline.enternet.OnlineGameScreen;
 import com.rat6.chessonline.enternet.simple_client.SimpleClient;
 import com.rat6.chessonline.utils.Keyboard;
 
@@ -50,8 +50,8 @@ public class ClientConnectScreen extends ScreenAdapter {
                 connect();
             }
         }
-        if(client.isConnected()){
-            game.setScreen(new ClientGameScreen(game, client));
+        if(connected && client.isConnected){
+            game.setScreen(new OnlineGameScreen(game, client));
         }else{
             connected = false;
         }
@@ -96,11 +96,7 @@ public class ClientConnectScreen extends ScreenAdapter {
     }
 
     @Override
-    public void pause(){
-        client.release();
-    }
-    @Override
     public void dispose(){
-        client.release();
+        //client.release();
     }
 }
