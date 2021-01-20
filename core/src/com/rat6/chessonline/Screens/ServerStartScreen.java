@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.rat6.chessonline.Main;
 import com.rat6.chessonline.OnlineGameScreen;
+import com.rat6.chessonline.chessLogic.PieceEnum;
 import com.rat6.chessonline.enternet.simple_server.SimpleServer;
 import com.rat6.chessonline.utils.StandardButton;
 
@@ -30,6 +31,7 @@ public class ServerStartScreen extends ScreenAdapter {
     private Rectangle windowRec = new Rectangle(0, 0, MENU_WIDTH, MENU_HEIGHT);
     private StandardButton backButton;
 
+    private PieceEnum team = PieceEnum.black;
 
     public ServerStartScreen(Main game){
         this.game = game;
@@ -58,7 +60,7 @@ public class ServerStartScreen extends ScreenAdapter {
             }
         }
         if(server.isConnected()){
-            game.setScreen(new OnlineGameScreen(game, server));
+            game.setScreen(new OnlineGameScreen(game, server, team));
         }
     }
 

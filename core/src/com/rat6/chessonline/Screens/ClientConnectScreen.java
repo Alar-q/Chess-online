@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.rat6.chessonline.Main;
 import com.rat6.chessonline.OnlineGameScreen;
+import com.rat6.chessonline.chessLogic.PieceEnum;
 import com.rat6.chessonline.enternet.simple_client.SimpleClient;
 import com.rat6.chessonline.utils.Keyboard;
 import com.rat6.chessonline.utils.StandardButton;
@@ -30,6 +31,8 @@ public class ClientConnectScreen extends ScreenAdapter {
     private SimpleClient client;
 
     private StandardButton backButton;
+
+    private PieceEnum team = PieceEnum.white;
 
     public ClientConnectScreen(Main game){
         this.game = game;
@@ -65,12 +68,11 @@ public class ClientConnectScreen extends ScreenAdapter {
         if(!connected && keyboard.update()){
             System.out.println(keyboard.getEnteredText());
             if(keyboard.lastPressedKey == keyboard.connect){
-                connected = true;
                 connect();
             }
         }
         if(connected && client.isConnected){
-            game.setScreen(new OnlineGameScreen(game, client));
+            game.setScreen(new OnlineGameScreen(game, client, team));
         }else{
             connected = false;
         }

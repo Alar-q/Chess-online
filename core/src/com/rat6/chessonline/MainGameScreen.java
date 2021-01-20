@@ -11,7 +11,7 @@ public class MainGameScreen extends ScreenAdapter {
     private Main game;
     private OrthographicCamera camera;
 
-    private Board board;
+    protected Board board;
     private Gamepad gamepadW;
     private Gamepad gamepadB;
 
@@ -34,11 +34,14 @@ public class MainGameScreen extends ScreenAdapter {
 
     private void update(){
         Input in = Gdx.input;
+        updateGamepad(in);
+    }
+
+    public void updateGamepad(Input in){
         if(board.turn==PieceEnum.white)
             gamepadW.update(in);
         else
             gamepadB.update(in);
-
     }
 
     private void present(){
@@ -79,5 +82,12 @@ public class MainGameScreen extends ScreenAdapter {
     public void drawGamepad_Highlight(){
         gamepadW.highlight_available();
         gamepadB.highlight_available();
+    }
+
+    public Gamepad getGamepad(PieceEnum team){
+        if(team == PieceEnum.white)
+            return gamepadW;
+        else
+            return gamepadB;
     }
 }

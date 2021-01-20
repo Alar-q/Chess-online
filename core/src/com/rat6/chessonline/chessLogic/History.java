@@ -85,7 +85,6 @@ public class History {
         System.out.println(res);
     }
 
-
     // x
     // INT - в массиве
     public static int ABC2INT(String c){

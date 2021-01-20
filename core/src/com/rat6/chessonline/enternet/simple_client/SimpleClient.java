@@ -15,7 +15,7 @@ public class SimpleClient extends ConnectIO{
             InetAddress address = InetAddress.getByName(ip);
             socket = new Socket(address, Constants.port);
 
-            return loadIO();
+            return isConnected=loadIO();
 
         } catch (Exception e) {
             e.printStackTrace();
