@@ -9,7 +9,7 @@ import java.net.Socket;
 
 import static com.rat6.chessonline.enternet.Constants.safe_word;
 
-public class ConnectIO {
+public class InetIO {
 
     protected Socket socket;
     protected ServerSocket serverSocket;

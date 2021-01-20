@@ -1,6 +1,6 @@
 package com.rat6.chessonline.enternet.simple_server;
 
-import com.rat6.chessonline.enternet.ConnectIO;
+import com.rat6.chessonline.enternet.InetIO;
 import com.rat6.chessonline.enternet.Constants;
 
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.net.*;
 
 import static com.rat6.chessonline.enternet.simple_server.HostAddress.getHostAddresses;
 
-public class SimpleServer extends ConnectIO{
+public class SimpleServer extends InetIO {
 
     private String ip;
 
