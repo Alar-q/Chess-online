@@ -21,7 +21,7 @@ public class InetIO {
         try {
             output = new PrintWriter(socket.getOutputStream(), true);
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            System.out.println("Requesting output to: " + socket.getInetAddress().getHostAddress());
+            //System.out.println("Requesting output to: " + socket.getInetAddress().getHostAddress());
             output.println("Hello");
             return true;
         }

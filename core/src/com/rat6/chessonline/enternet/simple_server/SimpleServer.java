@@ -50,7 +50,12 @@ public class SimpleServer extends InetIO {
         public void run(){
             try {
                 serverSocket = new ServerSocket(Constants.port);
-                ip = getHostAddresses()[0];
+                String[] s = getHostAddresses();
+                if(s!=null && s.length>0) {
+                    ip = s[0];
+                }else{
+                    ip="lol";
+                }
                 System.out.println("Server listening on port: " + Constants.port + ". IP: "+ ip);
                 socket = serverSocket.accept();
                 System.out.println("client connected.");
