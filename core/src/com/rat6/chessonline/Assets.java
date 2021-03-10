@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.rat6.chessonline.chessLogic.Figure;
 import com.rat6.chessonline.chessLogic.PieceEnum;
 import com.rat6.chessonline.framework.Font;
+import com.rat6.chessonline.framework.Font;
 
 public class Assets {
     public Texture atlas;
